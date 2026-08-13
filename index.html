@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sunbury Seminars, Inc. | Dental Continuing Education</title>
+  <meta name="description" content="Sunbury Seminars provides high-quality dental continuing education in pain and anxiety control, sedation, anesthesia, and pharmacology for Ohio dentists.">
+  <style>
+    :root {
+      --navy: #0a2540;
+      --teal: #0d9488;
+      --teal-dark: #0f766e;
+      --light-bg: #f8fafc;
+      --white: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--light-bg);
+    }
+    a { color: var(--teal); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Header */
+    header {
+      background: var(--navy);
+      color: white;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .logo {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .logo span { color: #5eead4; }
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .nav-links a {
+      color: #e2e8f0;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .nav-links a:hover { color: white; text-decoration: none; }
+    .btn {
+      display: inline-block;
+      background: var(--teal);
+      color: white !important;
+      padding: 0.65rem 1.4rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+      text-decoration: none !important;
+    }
+    .btn:hover { background: var(--teal-dark); }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid white;
+      color: white !important;
+    }
+    .btn-outline:hover { background: rgba(255,255,255,0.1); }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #0f3a5f 100%);
+      color: white;
+      padding: 4rem 0 3.5rem;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.03em;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      max-width: 640px;
+      margin: 0 auto 1.75rem;
+      opacity: 0.9;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Sections */
+    section {
+      padding: 3.5rem 0;
+    }
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .about {
+      background: white;
+    }
+    .about-content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .about-content p {
+      margin-bottom: 1rem;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+    .signature {
+      margin-top: 1.5rem;
+      font-style: italic;
+      color: var(--text);
+    }
+
+    /* Course Card */
+    .course-section {
+      background: var(--light-bg);
+    }
+    .course-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .course-header {
+      background: var(--navy);
+      color: white;
+      padding: 1.75rem 2rem;
+    }
+    .course-header h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.35rem;
+    }
+    .course-header .subtitle {
+      opacity: 0.85;
+      font-size: 1.05rem;
+    }
+    .ce-badge {
+      display: inline-block;
+      background: var(--teal);
+      color: white;
+      padding: 0.3rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 0.75rem;
+    }
+    .course-body {
+      padding: 2rem;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .info-item h4 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    .info-item p {
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .schedule {
+      margin: 2rem 0;
+    }
+    .schedule h4 {
+      font-size: 1.15rem;
+      color: var(--navy);
+      margin-bottom: 1rem;
+    }
+    .schedule-list {
+      list-style: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .schedule-list li {
+      display: flex;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      gap: 1rem;
+      font-size: 0.95rem;
+    }
+    .schedule-list li:last-child { border-bottom: none; }
+    .schedule-list li:nth-child(even) { background: #f8fafc; }
+    .time {
+      min-width: 140px;
+      font-weight: 600;
+      color: var(--teal-dark);
+      flex-shrink: 0;
+    }
+
+    .fees {
+      background: #f0fdfa;
+      border: 1px solid #99f6e4;
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .fees h4 {
+      color: var(--teal-dark);
+      margin-bottom: 0.75rem;
+    }
+    .fee-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.35rem 0;
+      font-weight: 500;
+    }
+    .fees .note {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 0.75rem;
+    }
+
+    .speakers {
+      margin-top: 2rem;
+    }
+    .speakers h4 {
+      font-size: 1.15rem;
+      color: var(--navy);
+      margin-bottom: 1rem;
+    }
+    .speaker {
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .speaker:last-child { border-bottom: none; }
+    .speaker strong {
+      color: var(--navy);
+    }
+    .speaker .title {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    .register-cta {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .register-cta .btn {
+      font-size: 1.05rem;
+      padding: 0.85rem 2rem;
+    }
+
+    /* Accreditation */
+    .accreditation {
+      background: white;
+      text-align: center;
+    }
+    .pace-box {
+      max-width: 700px;
+      margin: 0 auto;
+      background: var(--light-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.75rem;
+    }
+    .pace-box h3 {
+      color: var(--navy);
+      margin-bottom: 0.75rem;
+    }
+    .pace-box p {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--navy);
+      color: #cbd5e1;
+      padding: 2.5rem 0 1.5rem;
+      text-align: center;
+    }
+    footer strong {
+      color: white;
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+    footer p {
+      font-size: 0.95rem;
+      margin-bottom: 0.35rem;
+    }
+    footer .contact {
+      margin: 1.25rem 0;
+    }
+    .copyright {
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .nav-links { width: 100%; justify-content: center; }
+      .hero { padding: 3rem 0 2.5rem; }
+      .course-body { padding: 1.25rem; }
+      .course-header { padding: 1.25rem; }
+      .schedule-list li { flex-direction: column; gap: 0.25rem; }
+      .time { min-width: auto; }
+      .fee-row { flex-direction: column; gap: 0.15rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="logo">Sunbury <span>Seminars</span></div>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#course">Upcoming Course</a>
+        <a href="#accreditation">Accreditation</a>
+        <a href="https://www.sunburyseminars.com/_files/ugd/52d055_59777dbb04ba40e3a40e337c443de611.pdf?index=true" class="btn" target="_blank" rel="noopener">Register</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Dental Continuing Education</h1>
+      <p>High-quality courses in pain &amp; anxiety control, sedation, anesthesia, and pharmacology for Ohio dentists — taught by practicing experts.</p>
+      <div class="hero-buttons">
+        <a href="#course" class="btn">View Upcoming Course</a>
+        <a href="https://www.sunburyseminars.com/_files/ugd/52d055_59777dbb04ba40e3a40e337c443de611.pdf?index=true" class="btn btn-outline" target="_blank" rel="noopener">Download Registration Form</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="container about-content">
+      <h2 class="section-title">About Sunbury Seminars</h2>
+      <p>Sunbury Seminars, Inc., is a proud sponsor of Dental Continuing Education in the state of Ohio. We focus primarily in the areas of pain and anxiety control (minimal to moderate sedation and deep/general anesthesia) and pharmacology.</p>
+      <p>Our mission is to provide the highest quality continuing education to the dental practitioner. Our courses present contemporary information which has relevance and clinical practicality for the dentist and is taught by experts in their field who practice what they teach on a daily basis.</p>
+      <p class="signature">Sincerely,<br>Carl R. Fleser, D.D.S., M.S.<br>President, Sunbury Seminars, Inc.</p>
+    </div>
+  </section>
+
+  <section class="course-section" id="course">
+    <div class="container">
+      <h2 class="section-title">Upcoming Course</h2>
+      <div class="course-card">
+        <div class="course-header">
+          <h3>Current Concepts in Office Anesthesia</h3>
+          <div class="subtitle">Adult and Pediatric Moderate to Deep Sedation and General Anesthesia</div>
+          <div class="ce-badge">7 Hours Dental CE • AGD PACE</div>
+        </div>
+        <div class="course-body">
+          <div class="info-grid">
+            <div class="info-item">
+              <h4>Date &amp; Time</h4>
+              <p>Saturday, October 24, 2026<br>8:00 AM – 4:30 PM</p>
+            </div>
+            <div class="info-item">
+              <h4>Location</h4>
+              <p>Quest Conference Center<br>9200 Worthington Rd, Suite 400<br>Westerville, OH 43082<br><small>(SE of I-71 &amp; Polaris Parkway)<br>Tel: 614-540-5540</small></p>
+            </div>
+          </div>
+
+          <div class="schedule">
+            <h4>Course Outline</h4>
+            <ul class="schedule-list">
+              <li><span class="time">7:30 – 8:00 AM</span> <span>Registration and Breakfast</span></li>
+              <li><span class="time">8:00 – 9:00 AM</span> <span>Basic ECG Review and Interpretation</span></li>
+              <li><span class="time">9:00 – 10:00 AM</span> <span>Airway and Pharmacologic Adjuncts (Adult and Pediatric)</span></li>
+              <li><span class="time">10:00 – 10:15 AM</span> <span>Break</span></li>
+              <li><span class="time">10:15 – 10:45 AM</span> <span>Updated Ohio Rules and Regulations: Pediatric / Moderate / Deep / General Anesthesia</span></li>
+              <li><span class="time">10:45 – 12:00 PM</span> <span>Oral Sedation / Moderate Sedation Options and Limitations</span></li>
+              <li><span class="time">12:00 – 1:00 PM</span> <span>Lunch</span></li>
+              <li><span class="time">1:00 – 2:00 PM</span> <span>Anesthetic Hypertension and Hypotension Issues</span></li>
+              <li><span class="time">2:00 – 3:00 PM</span> <span>Reversal Agents, OUD Treatments and Patient Considerations</span></li>
+              <li><span class="time">3:00 – 3:15 PM</span> <span>Break</span></li>
+              <li><span class="time">3:15 – 4:00 PM</span> <span>Adult and Pediatric Clinical Case Presentations</span></li>
+            </ul>
+          </div>
+
+          <div class="fees">
+            <h4>Registration Fees</h4>
+            <div class="fee-row"><span>D.D.S. / D.M.D.</span> <strong>$525.00</strong></div>
+            <div class="fee-row"><span>Office Staff</span> <strong>$300.00</strong></div>
+            <p class="note">Includes continental breakfast and lunch. Each individual must register separately.</p>
+          </div>
+
+          <div class="speakers">
+            <h4>Featured Speakers</h4>
+            <div class="speaker">
+              <strong>Dr. Carl R. Fleser, D.D.S., M.S.</strong>
+              <div class="title">Course Director • Clinical Assistant Professor, The Ohio State University College of Dentistry • Director, Ambulatory Anesthesia Group, Inc.</div>
+            </div>
+            <div class="speaker">
+              <strong>Dr. Bryant W. Cornelius, D.D.S., M.P.H., M.B.A.</strong>
+              <div class="title">Clinical Assistant Professor, The Ohio State University College of Dentistry • Ambulatory Anesthesia Group, Inc.</div>
+            </div>
+          </div>
+
+          <div class="register-cta">
+            <a href="https://www.sunburyseminars.com/_files/ugd/52d055_59777dbb04ba40e3a40e337c443de611.pdf?index=true" class="btn" target="_blank" rel="noopener">Download Registration Form (PDF)</a>
+            <p style="margin-top:1rem;font-size:0.9rem;color:var(--muted);">Mail completed form with payment to the address below</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="accreditation" id="accreditation">
+    <div class="container">
+      <div class="pace-box">
+        <h3>PACE Accreditation</h3>
+        <p>Sunbury Seminars, Inc. is a locally approved PACE Program Provider for FAGD/MAGD credit. Approval does not imply acceptance by any regulatory authority or AGD endorsement.</p>
+        <p style="margin-top:0.75rem;"><strong>Provider ID# 217615</strong><br>Approval period: 4/1/2026 – 3/31/2028</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <strong>Sunbury Seminars, Inc.</strong>
+      <div class="contact">
+        <p>1530 N. St. Rt. 61<br>Sunbury, Ohio 43074</p>
+        <p>Phone: 800-222-8207 Ext 1<br>Fax: 740-965-9560</p>
+      </div>
+      <p class="copyright">&copy; 2026 Sunbury Seminars, Inc. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
