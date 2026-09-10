@@ -40,8 +40,8 @@ export default async function handler(req, res) {
     },
     shoppingCart: { lineItems },
     redirectUrls: {
-      success: 'https://tomfles1234-star.github.io/sunbury-seminars/thank-you.html',
-      failure: 'https://tomfles1234-star.github.io/sunbury-seminars/register.html'
+      success: 'https://sunburyseminars.com/thank-you.html',
+      failure: 'https://sunburyseminars.com/'
     }
   };
 
