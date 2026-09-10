@@ -1,0 +1,50 @@
+{
+  "buyer": {
+    "first": "Final",
+    "last": "Check",
+    "email": "final.check@example.com",
+    "phone": "6145550555",
+    "practice": "Final",
+    "attending": false,
+    "street": "5 Main",
+    "city": "Sunbury",
+    "state": "OH",
+    "zip": "43074"
+  },
+  "people": [
+    {
+      "role": "staff",
+      "first": "Final",
+      "last": "Check",
+      "email": "final.check@example.com",
+      "phone": "6145550555",
+      "street": "5 Main",
+      "city": "Sunbury",
+      "state": "OH",
+      "zip": "43074"
+    }
+  ],
+  "rows": [
+    {
+      "Submitted": "2026-09-10T21:48:55.653Z",
+      "CourseDate": "2026-10-24",
+      "Practice": "Final",
+      "PayerFirst": "Final",
+      "PayerLast": "Check",
+      "PayerEmail": "final.check@example.com",
+      "PayerPhone": "6145550555",
+      "PayerAttending": "No",
+      "FirstName": "Final",
+      "LastName": "Check",
+      "Email": "final.check@example.com",
+      "Phone": "6145550555",
+      "Street": "5 Main",
+      "City": "Sunbury",
+      "State": "OH",
+      "ZIP": "43074",
+      "Title": "Staff",
+      "Fee": 300
+    }
+  ],
+  "total": 300
+}
