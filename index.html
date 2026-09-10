@@ -41,15 +41,19 @@
     .add { background:#ece8e0; margin:.5rem .35rem 0 0; }
     .remove { background:none; color:#8a3a2a; }
     .go { width:100%; background:#e67a28; color:#fff; margin-top:.55rem; padding:.9rem; }
+    .go:disabled { background:#c9b8a4; cursor:not-allowed; }
     .save { width:100%; background:#3d4558; color:#fff; margin-top:.65rem; padding:.9rem; }
     .check { display:flex; gap:.5rem; align-items:flex-start; font:15px/1.35 Arial,sans-serif; margin-top:.7rem; }
     .check input { width:auto; margin-top:.15rem; }
     .total { font-size:1.45rem; }
     .err { color:#8a3a2a; display:none; margin-top:.5rem; font:15px Arial,sans-serif; }
-    .ok { color:#1b5e20; display:none; margin-top:.5rem; font:15px Arial,sans-serif; }
     .hint { color:#5d6573; font:14.5px/1.45 Arial,sans-serif; margin:.3rem 0 .2rem; }
-    #receipt { display:none; background:#eef7ee; border:1px solid #b7d7b0; border-radius:12px; padding:.9rem 1rem; margin-top:.8rem; color:#1d2430; }
-    #receipt li { font:15px/1.45 Arial,sans-serif; margin:.2rem 0; }
+    #buyerExtra { display:none; }
+    #locked { display:none; }
+    #entry.out { opacity:0; transform:translateY(-8px); transition:.45s ease; pointer-events:none; max-height:0; overflow:hidden; margin:0; padding:0; }
+    #locked.in { display:block; animation:pop .45s ease; }
+    @keyframes pop { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+    #paycard.ready { box-shadow:0 0 0 3px rgba(230,122,40,.45); }
     @media (max-width:700px) { .two, .grid, .grid3 { grid-template-columns:1fr; } .times li { grid-template-columns:1fr; } }
   </style>
 </head>
@@ -97,36 +101,40 @@
     </section>
     <section class="block" id="register">
       <h2>Register</h2>
-      <p>Fill every attendee. Submit list stores the names. Pay on Clover uses the people on this form for the locked total.</p>
+      <p>List everyone who is coming. Submit the list. Then pay the locked total. Clover already has the payer name and email from this page.</p>
       <form id="form">
-        <div class="card">
-          <strong>Who is paying</strong>
-          <div class="grid">
-            <div><label>First name <i>*</i></label><input name="buyerFirst" required></div>
-            <div><label>Last name <i>*</i></label><input name="buyerLast" required></div>
+        <div id="entry">
+          <div class="card">
+            <strong>Practice</strong>
+            <label>Practice name <i>*</i></label><input name="practice" required>
+            <label class="check"><input type="checkbox" name="payerIsFirst" checked><span>The first attendee is paying with their card. Clover will use their name and email. Uncheck only if the office manager is paying and not on the list.</span></label>
+            <div id="buyerExtra">
+              <p class="hint">Payer is not an attendee. Receipt goes to this person.</p>
+              <div class="grid">
+                <div><label>Payer first name <i>*</i></label><input name="buyerFirst"></div>
+                <div><label>Payer last name <i>*</i></label><input name="buyerLast"></div>
+              </div>
+              <div class="grid">
+                <div><label>Payer email <i>*</i></label><input type="email" name="buyerEmail"></div>
+                <div><label>Payer phone <i>*</i></label><input type="tel" name="buyerPhone"></div>
+              </div>
+            </div>
           </div>
-          <label>Practice <i>*</i></label><input name="practice" required>
-          <div class="grid">
-            <div><label>Receipt email <i>*</i></label><input type="email" name="buyerEmail" required></div>
-            <div><label>Phone <i>*</i></label><input type="tel" name="buyerPhone" required></div>
+          <div class="card">
+            <strong>Who is coming</strong>
+            <p class="hint">One person or the whole office. First row is usually the dentist who is paying.</p>
+            <div id="people"></div>
+            <button type="button" class="add" id="addDentist">+ Dentist $525</button>
+            <button type="button" class="add" id="addStaff">+ Staff $300</button>
+            <p class="err" id="err"></p>
           </div>
-          <label class="check"><input type="checkbox" name="buyerAttending"><span>I am attending. Add my dentist or staff row below.</span></label>
         </div>
-        <div class="card">
-          <strong>Attendees</strong>
-          <p class="hint">One person or the whole office. Every coming person needs a row.</p>
-          <div id="people"></div>
-          <button type="button" class="add" id="addDentist">+ Dentist $525</button>
-          <button type="button" class="add" id="addStaff">+ Staff $300</button>
-          <p class="err" id="err"></p>
-          <p class="ok" id="ok"></p>
-          <div id="receipt"></div>
-        </div>
-        <div class="card">
+        <div class="card" id="locked"></div>
+        <div class="card" id="paycard">
           <div class="hint" id="summary">No attendees yet</div>
           <div class="total" id="total">Total $0.00</div>
           <button class="save" type="button" id="savebtn">Submit attendee list</button>
-          <button class="go" type="button" id="paybtn">Pay this total on Clover</button>
+          <button class="go" type="button" id="paybtn" disabled>Pay on Clover after the list is submitted</button>
         </div>
       </form>
     </section>
@@ -135,8 +143,13 @@
     const SAVE = 'https://sunbury-seminars-pay-preview.vercel.app/api/save-roster';
     const PAY = 'https://sunbury-seminars-pay-preview.vercel.app/api/create-checkout';
     const peopleEl = document.getElementById('people');
-    let n = 0;
+    const extra = document.getElementById('buyerExtra');
+    let n = 0, submitted = null, locked = false;
+    document.querySelector('[name="payerIsFirst"]').onchange = (e) => {
+      extra.style.display = e.target.checked ? 'none' : 'block';
+    };
     function addPerson(role) {
+      if (locked) return;
       n += 1;
       const wrap = document.createElement('div');
       wrap.className = 'person';
@@ -158,7 +171,7 @@
           <div><label>State <i>*</i></label><input name="state-${n}" required maxlength="2"></div>
           <div><label>ZIP <i>*</i></label><input name="zip-${n}" required></div>
         </div>`;
-      wrap.querySelector('.remove').onclick = () => { wrap.remove(); tally(); };
+      wrap.querySelector('.remove').onclick = () => { if (!locked) { wrap.remove(); tally(); } };
       peopleEl.appendChild(wrap); tally();
     }
     function roster() {
@@ -174,9 +187,7 @@
         zip: p.querySelector('[name^="zip"]').value.trim()
       }));
     }
-    function totalOf(list) {
-      return list.reduce((s, p) => s + (p.role === 'staff' ? 300 : 525), 0);
-    }
+    function totalOf(list) { return list.reduce((s, p) => s + (p.role === 'staff' ? 300 : 525), 0); }
     function tally() {
       const list = roster();
       const d = list.filter(x => x.role === 'dentist').length;
@@ -185,56 +196,71 @@
       document.getElementById('total').textContent = 'Total $' + totalOf(list).toFixed(2);
       document.getElementById('err').style.display = 'none';
     }
-    function payload() {
+    function buyerOf(list) {
       const f = document.getElementById('form');
-      return {
-        buyer: { first: f.buyerFirst.value.trim(), last: f.buyerLast.value.trim(), email: f.buyerEmail.value.trim(), phone: f.buyerPhone.value.trim(), practice: f.practice.value.trim(), attending: f.buyerAttending.checked },
-        people: roster()
-      };
-    }
-    function valid(show) {
-      const f = document.getElementById('form');
-      const list = roster();
-      if (!f.buyerFirst.value.trim() || !f.buyerLast.value.trim() || !f.practice.value.trim() || !f.buyerEmail.value.trim() || !f.buyerPhone.value.trim())
-        return show('Complete the buyer fields first.'), false;
-      if (!list.length) return show('Add every person who is coming.'), false;
-      if (list.some(p => !p.first || !p.last || !p.email || !p.phone || !p.street || !p.city || !p.state || !p.zip))
-        return show('Every attendee field is required.'), false;
-      return true;
+      if (f.payerIsFirst.checked && list[0]) {
+        return { first: list[0].first, last: list[0].last, email: list[0].email, phone: list[0].phone, practice: f.practice.value.trim(), attending: true };
+      }
+      return { first: f.buyerFirst.value.trim(), last: f.buyerLast.value.trim(), email: f.buyerEmail.value.trim(), phone: f.buyerPhone.value.trim(), practice: f.practice.value.trim(), attending: false };
     }
     function showErr(t) {
       const err = document.getElementById('err');
       err.textContent = t; err.style.display = 'block';
     }
+    function valid() {
+      const f = document.getElementById('form');
+      const list = roster();
+      if (!f.practice.value.trim()) return showErr('Enter the practice name.'), false;
+      if (!list.length) return showErr('Add every person who is coming.'), false;
+      if (list.some(p => !p.first || !p.last || !p.email || !p.phone || !p.street || !p.city || !p.state || !p.zip))
+        return showErr('Every attendee field is required.'), false;
+      if (!f.payerIsFirst.checked) {
+        if (!f.buyerFirst.value.trim() || !f.buyerLast.value.trim() || !f.buyerEmail.value.trim() || !f.buyerPhone.value.trim())
+          return showErr('Enter the person who is paying.'), false;
+      }
+      return true;
+    }
     document.getElementById('addDentist').onclick = () => addPerson('dentist');
     document.getElementById('addStaff').onclick = () => addPerson('staff');
     addPerson('dentist');
     document.getElementById('savebtn').onclick = async () => {
-      if (!valid(showErr)) return;
-      const data = payload();
-      const rec = document.getElementById('receipt');
-      const ok = document.getElementById('ok');
-      rec.innerHTML = '<strong>List submitted</strong><ul>' + data.people.map(p => `<li>${p.first} ${p.last} — ${p.role === 'staff' ? 'Staff $300' : 'Dentist $525'} — ${p.email}</li>`).join('') + '</ul><p>Clover will charge $' + totalOf(data.people).toFixed(2) + ' for these people.</p>';
-      rec.style.display = 'block';
-      ok.textContent = data.people.length + ' attendee(s) accepted.';
-      ok.style.display = 'block';
-      document.getElementById('err').style.display = 'none';
+      if (locked || !valid()) return;
+      const people = roster();
+      submitted = { buyer: buyerOf(people), people };
+      locked = true;
+      const box = document.getElementById('locked');
+      box.innerHTML = '<strong>List submitted</strong><p class="hint">Refresh the page only if you need to change names.</p><ul style="margin:.4rem 0 0;padding-left:1.1rem;">' +
+        people.map(p => `<li>${p.first} ${p.last} — ${p.role === 'staff' ? 'Staff $300' : 'Dentist $525'} — ${p.email}</li>`).join('') +
+        '</ul><p style="margin:.7rem 0 0;">Clover will charge <strong>$' + totalOf(people).toFixed(2) + '</strong>. Receipt: ' + submitted.buyer.email + '</p>';
+      document.getElementById('entry').classList.add('out');
+      setTimeout(() => {
+        document.getElementById('entry').style.display = 'none';
+        box.classList.add('in');
+        const pay = document.getElementById('paybtn');
+        pay.disabled = false;
+        pay.textContent = 'Pay $' + totalOf(people).toFixed(2) + ' on Clover';
+        document.getElementById('savebtn').style.display = 'none';
+        document.getElementById('paycard').classList.add('ready');
+        pay.focus();
+        pay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 420);
       try {
-        await fetch(SAVE, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data) });
+        await fetch(SAVE, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(submitted) });
       } catch (e) {}
     };
     document.getElementById('paybtn').onclick = async () => {
-      if (!valid(showErr)) return;
+      if (!submitted) return showErr('Submit the attendee list first.');
       const btn = document.getElementById('paybtn');
       btn.disabled = true; btn.textContent = 'Opening Clover…';
       try {
-        const r = await fetch(PAY, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload()) });
+        const r = await fetch(PAY, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(submitted) });
         const data = await r.json();
         if (!r.ok || !data.href) throw new Error(data.error || 'Clover did not return a pay page.');
         location.href = data.href;
       } catch (ex) {
         showErr(ex.message);
-        btn.disabled = false; btn.textContent = 'Pay this total on Clover';
+        btn.disabled = false;
+        btn.textContent = 'Pay $' + totalOf(submitted.people).toFixed(2) + ' on Clover';
       }
     };
   </script>
