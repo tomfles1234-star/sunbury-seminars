@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Register | Sunbury Seminars Inc</title>
+  <style>
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:Georgia,serif; background:#4a5163; color:#1c2430; }
+    .wrap { width:min(740px, calc(100% - 2rem)); margin:0 auto; padding:1.6rem 0 3rem; }
+    h1 { color:#fff; font-weight:normal; font-size:1.85rem; margin:.25rem 0 .6rem; }
+    .lead, .fine { color:#d8dbe3; font:15px/1.45 Arial,sans-serif; }
+    .note { background:#fff6e8; border:2px solid #e67a28; color:#3a2a12; padding:.85rem 1rem; border-radius:10px; font:600 .95rem/1.4 Arial,sans-serif; margin:1rem 0; }
+    .card { background:#fff; border-radius:12px; padding:1.1rem; margin:1rem 0; }
+    label { display:block; font:650 .8rem Arial,sans-serif; margin:.5rem 0 .22rem; }
+    label span { color:#c62828; }
+    input { width:100%; padding:.62rem .7rem; border:1px solid #d0d5dd; border-radius:8px; font:16px Arial,sans-serif; }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+    .person { border:1px solid #e4ddd2; border-radius:10px; padding:.8rem; margin-top:.65rem; }
+    .person-head { display:flex; justify-content:space-between; align-items:center; }
+    .tag { font:700 .72rem Arial,sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#9a7840; }
+    button { font:700 .95rem Arial,sans-serif; cursor:pointer; border:0; border-radius:8px; padding:.75rem 1rem; }
+    .add { background:#ececec; margin:.4rem .35rem 0 0; }
+    .remove { background:transparent; color:#8a3a2a; }
+    .go { width:100%; background:#e67a28; color:#fff; margin-top:.7rem; }
+    .check { display:flex; gap:.5rem; align-items:flex-start; font:15px/1.35 Arial,sans-serif; margin-top:.75rem; }
+    .check input { width:auto; margin-top:.15rem; }
+    .total { font-size:1.45rem; font-weight:700; }
+    .err { color:#8a3a2a; display:none; margin-top:.5rem; font:15px Arial,sans-serif; }
+    .back { color:#c4a36a; }
+    @media (max-width:640px) { .row { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p><a class="back" href="index.html">&larr; Sunbury Seminars</a></p>
+    <h1>Register</h1>
+    <p class="lead">Add every person who is coming. One Clover charge for the total. $525 and $300 are per person. Clover emails one receipt to the buyer.</p>
+    <div class="note">The Microsoft Form (SSI_2026) is the class list. This page only builds the locked Clover total so the office pays once.</div>
+    <form id="form">
+      <div class="card">
+        <strong>Buyer (card receipt)</strong>
+        <div class="row">
+          <div><label>First name <span>*</span></label><input name="buyerFirst" required></div>
+          <div><label>Last name <span>*</span></label><input name="buyerLast" required></div>
+        </div>
+        <label>Practice <span>*</span></label><input name="practice" required>
+        <div class="row">
+          <div><label>Email for the Clover receipt <span>*</span></label><input type="email" name="buyerEmail" required></div>
+          <div><label>Phone <span>*</span></label><input type="tel" name="buyerPhone" required></div>
+        </div>
+        <label class="check"><input type="checkbox" name="buyerAttending"><span>Buyer is also attending (add them as a dentist or staff row below).</span></label>
+      </div>
+      <div class="card">
+        <strong>Attendees</strong>
+        <div id="people"></div>
+        <button type="button" class="add" id="addDentist">+ Dentist $525</button>
+        <button type="button" class="add" id="addStaff">+ Staff $300</button>
+        <p class="err" id="err"></p>
+      </div>
+      <div class="card">
+        <div id="summary" style="color:#5d6b79;">No attendees yet</div>
+        <div class="total" id="total">Total $0.00</div>
+        <button class="go" type="submit" id="paybtn">Pay this total on Clover</button>
+        <p class="fine" style="color:#5d6b79;margin-top:.7rem;">Backup links:
+          <a href="https://link.clover.com/urlshortener/DzvjQ9" target="_blank" rel="noopener">$525 dentist</a> ·
+          <a href="https://link.clover.com/urlshortener/BbD6Jc" target="_blank" rel="noopener">$300 staff</a>
+        </p>
+      </div>
+    </form>
+  </div>
+  <script>
+    const API = 'https://sunbury-seminars-pay-preview.vercel.app/api/create-checkout';
+    const PRICE = { dentist: 525, staff: 300 };
+    const peopleEl = document.getElementById('people');
+    let n = 0;
+    function addPerson(role) {
+      n += 1;
+      const wrap = document.createElement('div');
+      wrap.className = 'person';
+      wrap.dataset.role = role;
+      wrap.innerHTML = `
+        <div class="person-head">
+          <span class="tag">${role === 'dentist' ? 'Dentist · $525' : 'Staff · $300'}</span>
+          <button type="button" class="remove">Remove</button>
+        </div>
+        <div class="row">
+          <div><label>First name <span>*</span></label><input name="first-${n}" required></div>
+          <div><label>Last name <span>*</span></label><input name="last-${n}" required></div>
+        </div>
+        <div class="row">
+          <div><label>Email <span>*</span></label><input type="email" name="email-${n}" required></div>
+          <div><label>Phone <span>*</span></label><input name="phone-${n}" required></div>
+        </div>`;
+      wrap.querySelector('.remove').onclick = () => { wrap.remove(); tally(); };
+      peopleEl.appendChild(wrap);
+      tally();
+    }
+    function roster() {
+      return [...peopleEl.querySelectorAll('.person')].map(p => ({
+        role: p.dataset.role,
+        first: p.querySelector('[name^="first"]').value.trim(),
+        last: p.querySelector('[name^="last"]').value.trim(),
+        email: p.querySelector('[name^="email"]').value.trim().toLowerCase(),
+        phone: p.querySelector('[name^="phone"]').value.trim(),
+        price: PRICE[p.dataset.role]
+      }));
+    }
+    function tally() {
+      const list = roster();
+      const d = list.filter(x => x.role === 'dentist').length;
+      const s = list.filter(x => x.role === 'staff').length;
+      document.getElementById('summary').textContent = list.length
+        ? `${list.length} people · ${d} dentist(s) · ${s} staff`
+        : 'No attendees yet';
+      document.getElementById('total').textContent = 'Total $' + (d * 525 + s * 300).toFixed(2);
+      document.getElementById('err').style.display = 'none';
+    }
+    document.getElementById('addDentist').onclick = () => addPerson('dentist');
+    document.getElementById('addStaff').onclick = () => addPerson('staff');
+    addPerson('dentist');
+    document.getElementById('form').onsubmit = async (e) => {
+      e.preventDefault();
+      const list = roster();
+      const err = document.getElementById('err');
+      const show = (t) => { err.textContent = t; err.style.display = 'block'; };
+      const btn = document.getElementById('paybtn');
+      if (!list.length) return show('Add every person this payment covers.');
+      if (list.some(p => !p.first || !p.last || !p.email || !p.phone)) return show('Every attendee field is required.');
+      const f = e.target;
+      btn.disabled = true;
+      btn.textContent = 'Opening Clover…';
+      try {
+        const r = await fetch(API, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            buyer: {
+              first: f.buyerFirst.value.trim(),
+              last: f.buyerLast.value.trim(),
+              email: f.buyerEmail.value.trim(),
+              phone: f.buyerPhone.value.trim(),
+              practice: f.practice.value.trim(),
+              attending: f.buyerAttending.checked
+            },
+            people: list
+          })
+        });
+        const data = await r.json();
+        if (!r.ok || !data.href) throw new Error(data.error || 'Clover did not return a pay page.');
+        location.href = data.href;
+      } catch (ex) {
+        show(ex.message + ' Use the backup links if needed.');
+        btn.disabled = false;
+        btn.textContent = 'Pay this total on Clover';
+      }
+    };
+  </script>
+</body>
+</html>
