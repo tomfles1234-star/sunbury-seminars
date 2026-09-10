@@ -31,17 +31,27 @@ export default async function handler(req, res) {
     };
   });
 
+  const person = people[0] || {};
+  const address1 = buyer.address1 || buyer.street || person.address1 || person.street || '';
+  const city = buyer.city || person.city || '';
+  const state = buyer.state || person.state || '';
+  const zip = buyer.zip || person.zip || '';
+
   const payload = {
     customer: {
       firstName: buyer.first || 'Buyer',
       lastName: buyer.last || 'Office',
       email: buyer.email || undefined,
-      phoneNumber: (buyer.phone || '').replace(/\D/g, '') || undefined
+      phoneNumber: (buyer.phone || '').replace(/\D/g, '') || undefined,
+      address1: address1 || undefined,
+      city: city || undefined,
+      state: state || undefined,
+      zip: zip || undefined
     },
     shoppingCart: { lineItems },
     redirectUrls: {
       success: 'https://sunburyseminars.com/thank-you.html',
-      failure: 'https://sunburyseminars.com/'
+      failure: 'https://sunburyseminars.com/#register'
     }
   };
 
