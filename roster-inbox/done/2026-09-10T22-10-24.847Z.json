@@ -1,0 +1,50 @@
+{
+  "buyer": {
+    "first": "Tom",
+    "last": "Fleser",
+    "email": "tomfles1234@gmail.com",
+    "phone": "6145654837",
+    "street": "2000 Schindler Drive",
+    "city": "South Amboy",
+    "state": "NJ",
+    "zip": "08879",
+    "practice": "",
+    "attending": true
+  },
+  "people": [
+    {
+      "role": "dentist",
+      "first": "Tom",
+      "last": "Fleser",
+      "email": "tomfles1234@gmail.com",
+      "phone": "6145654837",
+      "street": "2000 Schindler Drive",
+      "city": "South Amboy",
+      "state": "NJ",
+      "zip": "08879"
+    }
+  ],
+  "rows": [
+    {
+      "Submitted": "2026-09-10T22:10:24.846Z",
+      "CourseDate": "2026-10-24",
+      "Practice": "",
+      "PayerFirst": "Tom",
+      "PayerLast": "Fleser",
+      "PayerEmail": "tomfles1234@gmail.com",
+      "PayerPhone": "6145654837",
+      "PayerAttending": "Yes",
+      "FirstName": "Tom",
+      "LastName": "Fleser",
+      "Email": "tomfles1234@gmail.com",
+      "Phone": "6145654837",
+      "Street": "2000 Schindler Drive",
+      "City": "South Amboy",
+      "State": "NJ",
+      "ZIP": "08879",
+      "Title": "Dentist",
+      "Fee": 525
+    }
+  ],
+  "total": 525
+}
