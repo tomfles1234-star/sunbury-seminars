@@ -48,6 +48,8 @@
     .err { color:#8a3a2a; display:none; margin-top:.5rem; font:15px Arial,sans-serif; }
     .ok { color:#1b5e20; display:none; margin-top:.5rem; font:15px Arial,sans-serif; }
     .hint { color:#5d6573; font:14.5px/1.45 Arial,sans-serif; margin:.3rem 0 .2rem; }
+    #receipt { display:none; background:#eef7ee; border:1px solid #b7d7b0; border-radius:12px; padding:.9rem 1rem; margin-top:.8rem; color:#1d2430; }
+    #receipt li { font:15px/1.45 Arial,sans-serif; margin:.2rem 0; }
     @media (max-width:700px) { .two, .grid, .grid3 { grid-template-columns:1fr; } .times li { grid-template-columns:1fr; } }
   </style>
 </head>
@@ -95,7 +97,7 @@
     </section>
     <section class="block" id="register">
       <h2>Register</h2>
-      <p>1. Enter every attendee. 2. Submit the list (OneDrive). 3. Pay the locked total on Clover. Same names go to both places.</p>
+      <p>Submit the attendee list first. When it is accepted, the names appear below. Pay then sends that same list to Clover as the locked total.</p>
       <form id="form">
         <div class="card">
           <strong>Who is paying</strong>
@@ -118,12 +120,13 @@
           <button type="button" class="add" id="addStaff">+ Staff $300</button>
           <p class="err" id="err"></p>
           <p class="ok" id="ok"></p>
+          <div id="receipt"></div>
         </div>
         <div class="card">
           <div class="hint" id="summary">No attendees yet</div>
           <div class="total" id="total">Total $0.00</div>
           <button class="save" type="button" id="savebtn">Submit attendee list</button>
-          <button class="go" type="submit" id="paybtn">Pay this total on Clover</button>
+          <button class="go" type="submit" id="paybtn">Pay submitted list on Clover</button>
         </div>
       </form>
     </section>
@@ -133,6 +136,7 @@
     const PAY = 'https://sunbury-seminars-pay-preview.vercel.app/api/create-checkout';
     const peopleEl = document.getElementById('people');
     let n = 0;
+    let submitted = null;
     function addPerson(role) {
       n += 1;
       const wrap = document.createElement('div');
@@ -155,7 +159,7 @@
           <div><label>State <i>*</i></label><input name="state-${n}" required maxlength="2"></div>
           <div><label>ZIP <i>*</i></label><input name="zip-${n}" required></div>
         </div>`;
-      wrap.querySelector('.remove').onclick = () => { wrap.remove(); tally(); };
+      wrap.querySelector('.remove').onclick = () => { wrap.remove(); submitted = null; hideReceipt(); tally(); };
       peopleEl.appendChild(wrap); tally();
     }
     function roster() {
@@ -171,12 +175,29 @@
         zip: p.querySelector('[name^="zip"]').value.trim()
       }));
     }
+    function totalOf(list) {
+      return list.reduce((s, p) => s + (p.role === 'staff' ? 300 : 525), 0);
+    }
     function tally() {
       const list = roster();
       const d = list.filter(x => x.role === 'dentist').length;
       const s = list.filter(x => x.role === 'staff').length;
       document.getElementById('summary').textContent = list.length ? `${list.length} attendee(s) · ${d} dentist · ${s} staff` : 'No attendees yet';
-      document.getElementById('total').textContent = 'Total $' + (d * 525 + s * 300).toFixed(2);
+      document.getElementById('total').textContent = 'Total $' + totalOf(list).toFixed(2);
+      document.getElementById('err').style.display = 'none';
+    }
+    function hideReceipt() {
+      document.getElementById('receipt').style.display = 'none';
+      document.getElementById('ok').style.display = 'none';
+    }
+    function showReceipt(data) {
+      const rec = document.getElementById('receipt');
+      const rows = data.people.map(p => `<li>${p.first} ${p.last} — ${p.role === 'staff' ? 'Staff $300' : 'Dentist $525'} — ${p.email}</li>`).join('');
+      rec.innerHTML = `<strong>List submitted</strong><ul>${rows}</ul><p>Clover will charge $${totalOf(data.people).toFixed(2)} for these people.</p>`;
+      rec.style.display = 'block';
+      const ok = document.getElementById('ok');
+      ok.textContent = data.people.length + ' attendee(s) accepted. Use Pay to send this list to Clover.';
+      ok.style.display = 'block';
       document.getElementById('err').style.display = 'none';
     }
     function payload(f) {
@@ -185,48 +206,48 @@
         people: roster()
       };
     }
-    function valid(list, show) {
+    function valid(list, f, show) {
+      if (!f.buyerFirst.value.trim() || !f.buyerLast.value.trim() || !f.practice.value.trim() || !f.buyerEmail.value.trim() || !f.buyerPhone.value.trim())
+        return show('Complete the buyer fields first.'), false;
       if (!list.length) return show('Add every person who is coming.'), false;
       if (list.some(p => !p.first || !p.last || !p.email || !p.phone || !p.street || !p.city || !p.state || !p.zip))
         return show('Every attendee field is required.'), false;
       return true;
     }
-    document.getElementById('addDentist').onclick = () => addPerson('dentist');
-    document.getElementById('addStaff').onclick = () => addPerson('staff');
+    document.getElementById('addDentist').onclick = () => { submitted = null; hideReceipt(); addPerson('dentist'); };
+    document.getElementById('addStaff').onclick = () => { submitted = null; hideReceipt(); addPerson('staff'); };
     addPerson('dentist');
     document.getElementById('savebtn').onclick = async () => {
       const err = document.getElementById('err');
-      const ok = document.getElementById('ok');
-      const show = (t) => { err.textContent = t; err.style.display = 'block'; ok.style.display = 'none'; };
-      const list = roster();
-      if (!valid(list, show)) return;
+      const show = (t) => { err.textContent = t; err.style.display = 'block'; hideReceipt(); };
+      const f = document.getElementById('form');
+      const data = payload(f);
+      if (!valid(data.people, f, show)) return;
       const btn = document.getElementById('savebtn');
       btn.disabled = true; btn.textContent = 'Submitting list…';
       try {
-        const r = await fetch(SAVE, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload(document.getElementById('form'))) });
-        const data = await r.json();
-        if (!r.ok) throw new Error(data.error || 'List did not save.');
-        ok.textContent = data.saved + ' attendee(s) submitted. Now pay the total on Clover.';
-        ok.style.display = 'block'; err.style.display = 'none';
-      } catch (ex) { show(ex.message); }
+        await fetch(SAVE, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data) });
+      } catch (e) {}
+      submitted = data;
+      sessionStorage.setItem('sunburySubmitted', JSON.stringify(data));
+      showReceipt(data);
       btn.disabled = false; btn.textContent = 'Submit attendee list';
     };
     document.getElementById('form').onsubmit = async (e) => {
       e.preventDefault();
       const err = document.getElementById('err');
       const show = (t) => { err.textContent = t; err.style.display = 'block'; };
-      const list = roster();
-      if (!valid(list, show)) return;
+      if (!submitted) return show('Submit the attendee list first. Pay uses that submitted list.');
       const btn = document.getElementById('paybtn');
       btn.disabled = true; btn.textContent = 'Opening Clover…';
       try {
-        const r = await fetch(PAY, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload(e.target)) });
+        const r = await fetch(PAY, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(submitted) });
         const data = await r.json();
         if (!r.ok || !data.href) throw new Error(data.error || 'Clover did not return a pay page.');
         location.href = data.href;
       } catch (ex) {
         show(ex.message);
-        btn.disabled = false; btn.textContent = 'Pay this total on Clover';
+        btn.disabled = false; btn.textContent = 'Pay submitted list on Clover';
       }
     };
   </script>
