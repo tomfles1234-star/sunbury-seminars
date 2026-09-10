@@ -98,12 +98,11 @@
     </section>
     <section class="block" id="register">
       <h2>Register</h2>
-      <p>Add yourself first as Dentist or Staff. Add more people under that if needed. The first person’s email gets the Clover receipt. One card pays the whole list.</p>
       <form id="form">
         <div id="entry">
           <div class="card">
             <strong>Attendees</strong>
-            <p class="hint">Start with you: Dentist $525 or Staff $300. For more people, add another row under yours.</p>
+            <p class="hint">Add yourself as Dentist or Staff. Add more people under that if needed.</p>
             <div id="people"></div>
             <button type="button" class="add" id="addDentist">+ Dentist $525</button>
             <button type="button" class="add" id="addStaff">+ Staff $300</button>
@@ -196,9 +195,9 @@
       submitted = { buyer: buyerOf(people), people };
       locked = true;
       const box = document.getElementById('locked');
-      box.innerHTML = '<strong>List submitted</strong><p class="hint">Refresh only if you need to change names.</p><ul style="margin:.4rem 0 0;padding-left:1.1rem;">' +
-        people.map(p => `<li>${p.first} ${p.last} — ${p.role === 'staff' ? 'Staff $300' : 'Dentist $525'} — ${p.email}</li>`).join('') +
-        '</ul><p style="margin:.7rem 0 0;">Clover will charge <strong>$' + totalOf(people).toFixed(2) + '</strong>. Receipt: ' + submitted.buyer.email + '</p>';
+      box.innerHTML = '<strong>List submitted</strong><ul style="margin:.4rem 0 0;padding-left:1.1rem;">' +
+        people.map(p => `<li>${p.first} ${p.last} — ${p.role === 'staff' ? 'Staff $300' : 'Dentist $525'}</li>`).join('') +
+        '</ul>';
       document.getElementById('entry').classList.add('out');
       setTimeout(() => {
         document.getElementById('entry').style.display = 'none';
