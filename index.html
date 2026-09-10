@@ -16,36 +16,26 @@
         repeating-linear-gradient(0deg, rgba(0,0,0,.04) 0 1px, transparent 1px 4px);
       line-height:1.45;
     }
-    .wrap { width:min(920px, calc(100% - 1.5rem)); margin:0 auto; padding:clamp(1.4rem, 4vw, 3.2rem) 0 clamp(2rem, 5vw, 3rem); }
-    h1 {
-      text-align:center;
-      font-size:clamp(1.85rem, 6.5vw, 3.5rem);
-      font-weight:normal;
-      margin:0 0 clamp(1.4rem, 4vw, 2.4rem);
-    }
-    .row {
-      display:grid;
-      grid-template-columns:minmax(9.5rem, 11rem) minmax(0, 34rem);
-      gap:clamp(1rem, 3vw, 1.8rem);
-      justify-content:center;
-      align-items:start;
-    }
+    .wrap { width:min(920px, calc(100% - 1.5rem)); margin:0 auto; padding:clamp(1.4rem, 4vw, 3.2rem) 0 3rem; }
+    h1 { text-align:center; font-size:clamp(1.85rem, 6.5vw, 3.5rem); font-weight:normal; margin:0 0 clamp(1.2rem, 4vw, 2.2rem); }
+    .row { display:grid; grid-template-columns:minmax(9.5rem, 11rem) minmax(0, 34rem); gap:clamp(1rem, 3vw, 1.8rem); justify-content:center; align-items:start; }
     .btns { display:flex; flex-direction:column; gap:.75rem; }
-    .btn {
-      display:block; text-align:center; text-decoration:none;
-      font:700 clamp(.82rem, 2.4vw, .95rem)/1.1 Arial, Helvetica, sans-serif;
-      border-radius:8px; padding:.85rem .5rem;
-      box-shadow:0 4px 0 rgba(0,0,0,.22);
-    }
+    .btn { display:block; text-align:center; text-decoration:none; font:700 clamp(.82rem, 2.4vw, .95rem)/1.1 Arial, Helvetica, sans-serif; border-radius:8px; padding:.85rem .5rem; box-shadow:0 4px 0 rgba(0,0,0,.22); }
     .gray { background:#e7e7e7; color:#222; }
     .orange { background:#e67a28; color:#fff; }
     .copy p { font-size:clamp(1rem, 2.6vw, 1.14rem); margin:0 0 1.1rem; }
-    .pace { font-size:clamp(.68rem, 2vw, .78rem) !important; opacity:.92; margin-top:1.2rem !important; }
-    .logo { text-align:center; margin-top:1.4rem; }
-    .logo-box { display:inline-block; background:#fff; color:#333; padding:.8rem 1rem; text-align:left; max-width:100%; }
-    .logo-box b { display:block; font:800 clamp(1.2rem, 4vw, 1.6rem)/1 Arial,sans-serif; letter-spacing:.04em; }
+    .pace { font-size:clamp(.68rem, 2vw, .78rem) !important; opacity:.92; }
+    .logo { text-align:center; margin-top:1.2rem; }
+    .logo-box { display:inline-block; background:#fff; color:#333; padding:.8rem 1rem; text-align:left; }
+    .logo-box b { display:block; font:800 1.5rem/1 Arial,sans-serif; letter-spacing:.04em; }
     .logo-box span { display:block; color:#1e73be; font:700 .7rem/1.2 Arial,sans-serif; }
     .logo-box em { display:block; color:#e67a28; font:700 .7rem/1.2 Arial,sans-serif; font-style:normal; }
+    .course { margin:2rem auto 0; width:min(36rem, 100%); }
+    .course h2 { font-size:clamp(1.2rem, 3.5vw, 1.5rem); font-weight:normal; margin:0 0 .5rem; }
+    .course h3 { font-size:clamp(1rem, 2.8vw, 1.08rem); margin:1rem 0 .3rem; }
+    .course p, .course li { font-size:clamp(.95rem, 2.5vw, 1.05rem); }
+    .outline { list-style:none; }
+    .outline li { margin:.18rem 0; }
     @media (max-width:700px) {
       .row { grid-template-columns:1fr; }
       .btns { flex-direction:row; flex-wrap:wrap; }
@@ -57,7 +47,7 @@
   <div class="wrap">
     <h1>Sunbury Seminars, Inc.</h1>
     <div class="row">
-      <nav class="btns" aria-label="Site">
+      <nav class="btns">
         <a class="btn gray" href="upcoming-courses.html">Upcoming Courses</a>
         <a class="btn orange" href="register.html">Register</a>
       </nav>
@@ -70,6 +60,43 @@
         <div class="logo"><div class="logo-box"><b>PACE</b><span>ACADEMY of GENERAL DENTISTRY</span><em>PROGRAM APPROVAL FOR CONTINUING EDUCATION</em></div></div>
       </div>
     </div>
+
+    <section class="course" id="course">
+      <h2>Upcoming Course</h2>
+      <p><strong>Current Concepts in Office Anesthesia</strong><br>
+      Adult and Pediatric Moderate to Deep Sedation and General Anesthesia<br>
+      CE Credits: 7 Hours Dental CE AGD PACE</p>
+      <h3>Date & Time</h3>
+      <p>Saturday, October 24, 2026, 8:00 AM to 4:30 PM</p>
+      <h3>Location</h3>
+      <p>Quest Conference Center (Tel: 614-540-5540)<br>
+      9200 Worthington Rd, Suite 400 (4th Floor)<br>
+      Westerville, Ohio 43082<br>
+      (Southeast of I-71 and Polaris Parkway Exit)</p>
+      <h3>Course Outline</h3>
+      <ul class="outline">
+        <li>7:30 &ndash; 8:00 AM &mdash; Registration and Breakfast</li>
+        <li>8:00 &ndash; 9:00 AM &mdash; Basic ECG Review and Interpretation</li>
+        <li>9:00 &ndash; 10:00 AM &mdash; Airway and Pharmacologic Adjuncts (Adult and Pediatric)</li>
+        <li>10:00 &ndash; 10:15 AM &mdash; Break</li>
+        <li>10:15 &ndash; 10:45 AM &mdash; Updated Ohio Rules and Regulations: Pediatric / Moderate / Deep / General Anesthesia</li>
+        <li>10:45 &ndash; 12:00 PM &mdash; Oral Sedation / Moderate Sedation Options and Limitations</li>
+        <li>12:00 &ndash; 1:00 PM &mdash; Lunch</li>
+        <li>1:00 &ndash; 2:00 PM &mdash; Anesthetic Hypertension and Hypotension Issues</li>
+        <li>2:00 &ndash; 3:00 PM &mdash; Reversal Agents, OUD Treatments and Patient Considerations</li>
+        <li>3:00 &ndash; 3:15 PM &mdash; Break</li>
+        <li>3:15 &ndash; 4:00 PM &mdash; Adult and Pediatric Clinical Case Presentations</li>
+      </ul>
+      <h3>Registration / attendees</h3>
+      <p>D.D.S., D.M.D. &mdash; $525.00 each<br>
+      Office staff &mdash; $300.00 each<br>
+      Includes continental breakfast and lunch.</p>
+      <p>Each person attending is an attendee. Add every dentist and staff member on Register, then pay one locked Clover total.</p>
+      <h3>Featured Speakers</h3>
+      <p>Dr. Carl R. Fleser, D.D.S., M.S. &mdash; Course Director; Clinical Assistant Professor, The Ohio State University College of Dentistry; Director, Ambulatory Anesthesia Group, Inc.</p>
+      <p>Dr. Bryant W. Cornelius, D.D.S., M.P.H., M.B.A. &mdash; Clinical Assistant Professor, The Ohio State University College of Dentistry; Ambulatory Anesthesia Group, Inc.</p>
+      <p style="margin-top:1rem;"><a class="btn orange" href="register.html" style="display:inline-block;min-width:11rem;">Register attendees</a></p>
+    </section>
   </div>
 </body>
 </html>
