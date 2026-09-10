@@ -7,23 +7,14 @@
   <style>
     * { box-sizing:border-box; margin:0; padding:0; }
     html { scroll-behavior:smooth; }
-    body {
-      font-family: Georgia, "Times New Roman", serif;
-      color:#f3efe6;
-      background:#454c5e;
-      line-height:1.55;
-    }
+    body { font-family: Georgia, "Times New Roman", serif; color:#f3efe6; background:#454c5e; line-height:1.55; }
     .bar { height:4px; background:#e67a28; }
     .wrap { width:min(780px, calc(100% - 1.5rem)); margin:0 auto; padding:2rem 0 4rem; }
     header { text-align:center; margin-bottom:1.6rem; }
-    h1 { font-size:clamp(2rem, 6vw, 3.2rem); font-weight:400; letter-spacing:.01em; }
+    h1 { font-size:clamp(2rem, 6vw, 3.2rem); font-weight:400; }
     .sub { font:500 .92rem/1.4 Arial,sans-serif; color:#cfc6b6; margin-top:.45rem; }
     .nav { display:flex; justify-content:center; gap:.5rem; margin-top:1rem; }
-    .nav a {
-      font:700 .8rem/1 Arial,sans-serif; letter-spacing:.06em; text-transform:uppercase;
-      color:#f3efe6; text-decoration:none; border:1px solid rgba(255,255,255,.22);
-      padding:.55rem .9rem; border-radius:999px;
-    }
+    .nav a { font:700 .8rem/1 Arial,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#f3efe6; text-decoration:none; border:1px solid rgba(255,255,255,.22); padding:.55rem .9rem; border-radius:999px; }
     .nav a.hi { background:#e67a28; border-color:#e67a28; }
     .block { margin:0 0 1.25rem; padding:1.35rem 1.3rem 1.4rem; background:rgba(255,255,255,.06); border-radius:18px; }
     h2 { font-size:clamp(1.25rem, 3.2vw, 1.55rem); font-weight:400; margin:0 0 .75rem; }
@@ -33,32 +24,31 @@
     .two { display:grid; grid-template-columns:1fr 1fr; gap:1rem 1.4rem; }
     .fees { display:flex; gap:.45rem; flex-wrap:wrap; margin:.2rem 0 1rem; }
     .fees span { font:700 .8rem Arial,sans-serif; padding:.4rem .75rem; border-radius:999px; }
-    .d { background:#e67a28; }
-    .s { background:#ece8e0; color:#222; }
+    .d { background:#e67a28; } .s { background:#ece8e0; color:#222; }
     .times { list-style:none; }
     .times li { display:grid; grid-template-columns:9.2rem 1fr; gap:.6rem; padding:.35rem 0; border-bottom:1px solid rgba(255,255,255,.08); font-size:.98rem; }
-    .times b { font:700 .78rem/1.4 Arial,sans-serif; color:#e0c48a; font-weight:700; }
+    .times b { font:700 .78rem/1.4 Arial,sans-serif; color:#e0c48a; }
     .card { background:#fff; color:#1d2430; border-radius:16px; padding:1.15rem; margin:0 0 .75rem; }
-    label { display:block; font:650 .75rem Arial,sans-serif; letter-spacing:.02em; margin:.45rem 0 .2rem; }
+    label { display:block; font:650 .75rem Arial,sans-serif; margin:.45rem 0 .2rem; }
     label i { color:#c62828; font-style:normal; }
     input { width:100%; padding:.6rem .7rem; border:1px solid #d5d0c8; border-radius:8px; font:16px Arial,sans-serif; }
     .grid { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+    .grid3 { display:grid; grid-template-columns:1.4fr .6fr .7fr; gap:.5rem; }
     .person { border:1px solid #ece6dc; border-radius:12px; padding:.75rem; margin-top:.55rem; background:#faf8f4; }
     .person-head { display:flex; justify-content:space-between; align-items:center; }
     .tag { font:700 .7rem Arial,sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#9a7840; }
     button { font:700 .9rem Arial,sans-serif; border:0; border-radius:8px; padding:.7rem 1rem; cursor:pointer; }
     .add { background:#ece8e0; margin:.5rem .35rem 0 0; }
     .remove { background:none; color:#8a3a2a; }
-    .go { width:100%; background:#e67a28; color:#fff; margin-top:.65rem; padding:.9rem; }
+    .go { width:100%; background:#e67a28; color:#fff; margin-top:.55rem; padding:.9rem; }
+    .save { width:100%; background:#3d4558; color:#fff; margin-top:.65rem; padding:.9rem; }
     .check { display:flex; gap:.5rem; align-items:flex-start; font:15px/1.35 Arial,sans-serif; margin-top:.7rem; }
     .check input { width:auto; margin-top:.15rem; }
     .total { font-size:1.45rem; }
     .err { color:#8a3a2a; display:none; margin-top:.5rem; font:15px Arial,sans-serif; }
+    .ok { color:#1b5e20; display:none; margin-top:.5rem; font:15px Arial,sans-serif; }
     .hint { color:#5d6573; font:14.5px/1.45 Arial,sans-serif; margin:.3rem 0 .2rem; }
-    @media (max-width:700px) {
-      .two, .grid { grid-template-columns:1fr; }
-      .times li { grid-template-columns:1fr; gap:.15rem; }
-    }
+    @media (max-width:700px) { .two, .grid, .grid3 { grid-template-columns:1fr; } .times li { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
@@ -67,12 +57,8 @@
     <header>
       <h1>Sunbury Seminars, Inc.</h1>
       <p class="sub">Dental continuing education &middot; Ohio &middot; Anesthesia and pharmacology</p>
-      <nav class="nav">
-        <a href="#course">Course</a>
-        <a class="hi" href="#register">Register</a>
-      </nav>
+      <nav class="nav"><a href="#course">Course</a><a class="hi" href="#register">Register</a></nav>
     </header>
-
     <section class="block">
       <p>Sunbury Seminars, Inc., is a proud sponsor of Dental Continuing Education in the state of Ohio. We focus primarily in the areas of pain and anxiety control (minimal to moderate sedation and deep/general anesthesia) and pharmacology.</p>
       <p>Our mission is to provide the highest quality continuing education to the dental practitioner.</p>
@@ -80,21 +66,12 @@
       <p>Sincerely,<br>Carl R. Fleser, D.D.S., M.S.<br>President, Sunbury Seminars, Inc.</p>
       <p class="pace">Sunbury Seminars, Inc. is a locally approved PACE Program Provider for FAGD/MAGD credit. Approval does not imply acceptance by any regulatory authority or AGD endorsement. Provider ID# 217615. Approval period: 4/1/2026 &ndash; 3/31/2028.</p>
     </section>
-
     <section class="block" id="course">
       <h2>October 24, 2026</h2>
-      <p><strong>Current Concepts in Office Anesthesia</strong><br>
-      Adult and Pediatric Moderate to Deep Sedation and General Anesthesia<br>
-      7 hours dental CE &middot; AGD PACE</p>
+      <p><strong>Current Concepts in Office Anesthesia</strong><br>Adult and Pediatric Moderate to Deep Sedation and General Anesthesia<br>7 hours dental CE &middot; AGD PACE</p>
       <div class="two">
-        <div>
-          <h3>When</h3>
-          <p>Saturday, 8:00 AM &ndash; 4:30 PM</p>
-        </div>
-        <div>
-          <h3>Where</h3>
-          <p>Quest Conference Center<br>9200 Worthington Rd, Suite 400<br>Westerville, Ohio 43082<br>614-540-5540</p>
-        </div>
+        <div><h3>When</h3><p>Saturday, 8:00 AM &ndash; 4:30 PM</p></div>
+        <div><h3>Where</h3><p>Quest Conference Center<br>9200 Worthington Rd, Suite 400<br>Westerville, Ohio 43082<br>614-540-5540</p></div>
       </div>
       <div class="fees"><span class="d">Dentist $525</span><span class="s">Staff $300</span></div>
       <p>Per person. Breakfast and lunch included. One office can register everyone below and pay once.</p>
@@ -116,10 +93,9 @@
       <p>Dr. Carl R. Fleser, D.D.S., M.S. &mdash; Course Director; Clinical Assistant Professor, The Ohio State University College of Dentistry; Director, Ambulatory Anesthesia Group, Inc.</p>
       <p>Dr. Bryant W. Cornelius, D.D.S., M.P.H., M.B.A. &mdash; Clinical Assistant Professor, The Ohio State University College of Dentistry; Ambulatory Anesthesia Group, Inc.</p>
     </section>
-
     <section class="block" id="register">
       <h2>Register</h2>
-      <p>Complete the fields on this page. One person or a whole office. Add a row for every attendee. Payment is separate, on Clover, as one locked total.</p>
+      <p>1. Enter every attendee. 2. Submit the list (OneDrive). 3. Pay the locked total on Clover. Same names go to both places.</p>
       <form id="form">
         <div class="card">
           <strong>Who is paying</strong>
@@ -136,22 +112,25 @@
         </div>
         <div class="card">
           <strong>Attendees</strong>
-          <p class="hint">Every person coming needs a row. Use + Dentist or + Staff for more people from the same office.</p>
+          <p class="hint">One person or the whole office. Every coming person needs a row.</p>
           <div id="people"></div>
           <button type="button" class="add" id="addDentist">+ Dentist $525</button>
           <button type="button" class="add" id="addStaff">+ Staff $300</button>
           <p class="err" id="err"></p>
+          <p class="ok" id="ok"></p>
         </div>
         <div class="card">
           <div class="hint" id="summary">No attendees yet</div>
           <div class="total" id="total">Total $0.00</div>
+          <button class="save" type="button" id="savebtn">Submit attendee list</button>
           <button class="go" type="submit" id="paybtn">Pay this total on Clover</button>
         </div>
       </form>
     </section>
   </div>
   <script>
-    const API = 'https://sunbury-seminars-pay-preview.vercel.app/api/create-checkout';
+    const SAVE = 'https://sunbury-seminars-pay-preview.vercel.app/api/save-roster';
+    const PAY = 'https://sunbury-seminars-pay-preview.vercel.app/api/create-checkout';
     const peopleEl = document.getElementById('people');
     let n = 0;
     function addPerson(role) {
@@ -160,10 +139,8 @@
       wrap.className = 'person';
       wrap.dataset.role = role;
       wrap.innerHTML = `
-        <div class="person-head">
-          <span class="tag">${role === 'dentist' ? 'Dentist · $525' : 'Staff · $300'}</span>
-          <button type="button" class="remove">Remove</button>
-        </div>
+        <div class="person-head"><span class="tag">${role === 'dentist' ? 'Dentist · $525' : 'Staff · $300'}</span>
+        <button type="button" class="remove">Remove</button></div>
         <div class="grid">
           <div><label>First name <i>*</i></label><input name="first-${n}" required></div>
           <div><label>Last name <i>*</i></label><input name="last-${n}" required></div>
@@ -171,10 +148,15 @@
         <div class="grid">
           <div><label>Email <i>*</i></label><input type="email" name="email-${n}" required></div>
           <div><label>Phone <i>*</i></label><input name="phone-${n}" required></div>
+        </div>
+        <label>Home street <i>*</i></label><input name="street-${n}" required>
+        <div class="grid3">
+          <div><label>City <i>*</i></label><input name="city-${n}" required></div>
+          <div><label>State <i>*</i></label><input name="state-${n}" required maxlength="2"></div>
+          <div><label>ZIP <i>*</i></label><input name="zip-${n}" required></div>
         </div>`;
       wrap.querySelector('.remove').onclick = () => { wrap.remove(); tally(); };
-      peopleEl.appendChild(wrap);
-      tally();
+      peopleEl.appendChild(wrap); tally();
     }
     function roster() {
       return [...peopleEl.querySelectorAll('.person')].map(p => ({
@@ -182,7 +164,11 @@
         first: p.querySelector('[name^="first"]').value.trim(),
         last: p.querySelector('[name^="last"]').value.trim(),
         email: p.querySelector('[name^="email"]').value.trim().toLowerCase(),
-        phone: p.querySelector('[name^="phone"]').value.trim()
+        phone: p.querySelector('[name^="phone"]').value.trim(),
+        street: p.querySelector('[name^="street"]').value.trim(),
+        city: p.querySelector('[name^="city"]').value.trim(),
+        state: p.querySelector('[name^="state"]').value.trim(),
+        zip: p.querySelector('[name^="zip"]').value.trim()
       }));
     }
     function tally() {
@@ -193,27 +179,48 @@
       document.getElementById('total').textContent = 'Total $' + (d * 525 + s * 300).toFixed(2);
       document.getElementById('err').style.display = 'none';
     }
+    function payload(f) {
+      return {
+        buyer: { first: f.buyerFirst.value.trim(), last: f.buyerLast.value.trim(), email: f.buyerEmail.value.trim(), phone: f.buyerPhone.value.trim(), practice: f.practice.value.trim(), attending: f.buyerAttending.checked },
+        people: roster()
+      };
+    }
+    function valid(list, show) {
+      if (!list.length) return show('Add every person who is coming.'), false;
+      if (list.some(p => !p.first || !p.last || !p.email || !p.phone || !p.street || !p.city || !p.state || !p.zip))
+        return show('Every attendee field is required.'), false;
+      return true;
+    }
     document.getElementById('addDentist').onclick = () => addPerson('dentist');
     document.getElementById('addStaff').onclick = () => addPerson('staff');
     addPerson('dentist');
+    document.getElementById('savebtn').onclick = async () => {
+      const err = document.getElementById('err');
+      const ok = document.getElementById('ok');
+      const show = (t) => { err.textContent = t; err.style.display = 'block'; ok.style.display = 'none'; };
+      const list = roster();
+      if (!valid(list, show)) return;
+      const btn = document.getElementById('savebtn');
+      btn.disabled = true; btn.textContent = 'Submitting list…';
+      try {
+        const r = await fetch(SAVE, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload(document.getElementById('form'))) });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || 'List did not save.');
+        ok.textContent = data.saved + ' attendee(s) submitted. Now pay the total on Clover.';
+        ok.style.display = 'block'; err.style.display = 'none';
+      } catch (ex) { show(ex.message); }
+      btn.disabled = false; btn.textContent = 'Submit attendee list';
+    };
     document.getElementById('form').onsubmit = async (e) => {
       e.preventDefault();
-      const list = roster();
       const err = document.getElementById('err');
       const show = (t) => { err.textContent = t; err.style.display = 'block'; };
+      const list = roster();
+      if (!valid(list, show)) return;
       const btn = document.getElementById('paybtn');
-      if (!list.length || list.some(p => !p.first || !p.last || !p.email || !p.phone)) return show('Every attendee field is required.');
-      const f = e.target;
       btn.disabled = true; btn.textContent = 'Opening Clover…';
       try {
-        const r = await fetch(API, {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({
-            buyer: { first: f.buyerFirst.value.trim(), last: f.buyerLast.value.trim(), email: f.buyerEmail.value.trim(), phone: f.buyerPhone.value.trim(), practice: f.practice.value.trim(), attending: f.buyerAttending.checked },
-            people: list
-          })
-        });
+        const r = await fetch(PAY, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload(e.target)) });
         const data = await r.json();
         if (!r.ok || !data.href) throw new Error(data.error || 'Clover did not return a pay page.');
         location.href = data.href;
