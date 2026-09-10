@@ -43,12 +43,9 @@
     .go { width:100%; background:#e67a28; color:#fff; margin-top:.55rem; padding:.9rem; }
     .go:disabled { background:#c9b8a4; cursor:not-allowed; }
     .save { width:100%; background:#3d4558; color:#fff; margin-top:.65rem; padding:.9rem; }
-    .check { display:flex; gap:.5rem; align-items:flex-start; font:15px/1.35 Arial,sans-serif; margin-top:.7rem; }
-    .check input { width:auto; margin-top:.15rem; }
     .total { font-size:1.45rem; }
     .err { color:#8a3a2a; display:none; margin-top:.5rem; font:15px Arial,sans-serif; }
     .hint { color:#5d6573; font:14.5px/1.45 Arial,sans-serif; margin:.3rem 0 .2rem; }
-    #buyerExtra, #practiceWrap { display:none; }
     #locked { display:none; }
     #entry.out { opacity:0; transform:translateY(-8px); transition:.45s ease; pointer-events:none; max-height:0; overflow:hidden; margin:0; padding:0; }
     #locked.in { display:block; animation:pop .45s ease; }
@@ -101,27 +98,9 @@
     </section>
     <section class="block" id="register">
       <h2>Register</h2>
-      <p>One person or several. Add yourself first and pick Dentist or Staff. Add anyone else from your office under that.</p>
+      <p>Add yourself first as Dentist or Staff. Add more people under that if needed. The first person’s email gets the Clover receipt. One card pays the whole list.</p>
       <form id="form">
         <div id="entry">
-          <div class="card">
-            <label class="check"><input type="checkbox" name="hasPractice"><span>I have a practice name to list</span></label>
-            <div id="practiceWrap">
-              <label>Practice name</label><input name="practice">
-            </div>
-            <label class="check"><input type="checkbox" name="payerIsFirst" checked><span>The first person below is paying. Clover uses their name and email. Uncheck only if someone else is paying and not attending.</span></label>
-            <div id="buyerExtra">
-              <p class="hint">Receipt goes to this payer.</p>
-              <div class="grid">
-                <div><label>Payer first name <i>*</i></label><input name="buyerFirst"></div>
-                <div><label>Payer last name <i>*</i></label><input name="buyerLast"></div>
-              </div>
-              <div class="grid">
-                <div><label>Payer email <i>*</i></label><input type="email" name="buyerEmail"></div>
-                <div><label>Payer phone <i>*</i></label><input type="tel" name="buyerPhone"></div>
-              </div>
-            </div>
-          </div>
           <div class="card">
             <strong>Attendees</strong>
             <p class="hint">Start with you: Dentist $525 or Staff $300. For more people, add another row under yours.</p>
@@ -146,12 +125,6 @@
     const PAY = 'https://sunbury-seminars-pay-preview.vercel.app/api/create-checkout';
     const peopleEl = document.getElementById('people');
     let n = 0, submitted = null, locked = false;
-    document.querySelector('[name="payerIsFirst"]').onchange = (e) => {
-      document.getElementById('buyerExtra').style.display = e.target.checked ? 'none' : 'block';
-    };
-    document.querySelector('[name="hasPractice"]').onchange = (e) => {
-      document.getElementById('practiceWrap').style.display = e.target.checked ? 'block' : 'none';
-    };
     function addPerson(role) {
       if (locked) return;
       n += 1;
@@ -200,32 +173,19 @@
       document.getElementById('total').textContent = 'Total $' + totalOf(list).toFixed(2);
       document.getElementById('err').style.display = 'none';
     }
-    function practiceName() {
-      const f = document.getElementById('form');
-      return f.hasPractice.checked ? f.practice.value.trim() : '';
-    }
     function buyerOf(list) {
-      const f = document.getElementById('form');
-      if (f.payerIsFirst.checked && list[0]) {
-        return { first: list[0].first, last: list[0].last, email: list[0].email, phone: list[0].phone, practice: practiceName(), attending: true };
-      }
-      return { first: f.buyerFirst.value.trim(), last: f.buyerLast.value.trim(), email: f.buyerEmail.value.trim(), phone: f.buyerPhone.value.trim(), practice: practiceName(), attending: false };
+      const p = list[0] || {};
+      return { first: p.first || '', last: p.last || '', email: p.email || '', phone: p.phone || '', street: p.street || '', city: p.city || '', state: p.state || '', zip: p.zip || '', practice: '', attending: true };
     }
     function showErr(t) {
       const err = document.getElementById('err');
       err.textContent = t; err.style.display = 'block';
     }
     function valid() {
-      const f = document.getElementById('form');
       const list = roster();
-      if (f.hasPractice.checked && !f.practice.value.trim()) return showErr('Enter the practice name or uncheck that box.'), false;
       if (!list.length) return showErr('Add yourself as dentist or staff.'), false;
       if (list.some(p => !p.first || !p.last || !p.email || !p.phone || !p.street || !p.city || !p.state || !p.zip))
         return showErr('Every attendee field is required.'), false;
-      if (!f.payerIsFirst.checked) {
-        if (!f.buyerFirst.value.trim() || !f.buyerLast.value.trim() || !f.buyerEmail.value.trim() || !f.buyerPhone.value.trim())
-          return showErr('Enter the person who is paying.'), false;
-      }
       return true;
     }
     document.getElementById('addDentist').onclick = () => addPerson('dentist');
