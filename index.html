@@ -48,7 +48,7 @@
     .total { font-size:1.45rem; }
     .err { color:#8a3a2a; display:none; margin-top:.5rem; font:15px Arial,sans-serif; }
     .hint { color:#5d6573; font:14.5px/1.45 Arial,sans-serif; margin:.3rem 0 .2rem; }
-    #buyerExtra { display:none; }
+    #buyerExtra, #practiceWrap { display:none; }
     #locked { display:none; }
     #entry.out { opacity:0; transform:translateY(-8px); transition:.45s ease; pointer-events:none; max-height:0; overflow:hidden; margin:0; padding:0; }
     #locked.in { display:block; animation:pop .45s ease; }
@@ -80,7 +80,7 @@
         <div><h3>Where</h3><p>Quest Conference Center<br>9200 Worthington Rd, Suite 400<br>Westerville, Ohio 43082<br>614-540-5540</p></div>
       </div>
       <div class="fees"><span class="d">Dentist $525</span><span class="s">Staff $300</span></div>
-      <p>Per person. Breakfast and lunch included. One office can register everyone below and pay once.</p>
+      <p>Per person. Breakfast and lunch included.</p>
       <h3>Schedule</h3>
       <ul class="times">
         <li><b>7:30&ndash;8:00</b><span>Registration and breakfast</span></li>
@@ -101,15 +101,17 @@
     </section>
     <section class="block" id="register">
       <h2>Register</h2>
-      <p>List everyone who is coming. Submit the list. Then pay the locked total. Clover already has the payer name and email from this page.</p>
+      <p>One person or several. Add yourself first and pick Dentist or Staff. Add anyone else from your office under that.</p>
       <form id="form">
         <div id="entry">
           <div class="card">
-            <strong>Practice</strong>
-            <label>Practice name <i>*</i></label><input name="practice" required>
-            <label class="check"><input type="checkbox" name="payerIsFirst" checked><span>The first attendee is paying with their card. Clover will use their name and email. Uncheck only if the office manager is paying and not on the list.</span></label>
+            <label class="check"><input type="checkbox" name="hasPractice"><span>I have a practice name to list</span></label>
+            <div id="practiceWrap">
+              <label>Practice name</label><input name="practice">
+            </div>
+            <label class="check"><input type="checkbox" name="payerIsFirst" checked><span>The first person below is paying. Clover uses their name and email. Uncheck only if someone else is paying and not attending.</span></label>
             <div id="buyerExtra">
-              <p class="hint">Payer is not an attendee. Receipt goes to this person.</p>
+              <p class="hint">Receipt goes to this payer.</p>
               <div class="grid">
                 <div><label>Payer first name <i>*</i></label><input name="buyerFirst"></div>
                 <div><label>Payer last name <i>*</i></label><input name="buyerLast"></div>
@@ -121,8 +123,8 @@
             </div>
           </div>
           <div class="card">
-            <strong>Who is coming</strong>
-            <p class="hint">One person or the whole office. First row is usually the dentist who is paying.</p>
+            <strong>Attendees</strong>
+            <p class="hint">Start with you: Dentist $525 or Staff $300. For more people, add another row under yours.</p>
             <div id="people"></div>
             <button type="button" class="add" id="addDentist">+ Dentist $525</button>
             <button type="button" class="add" id="addStaff">+ Staff $300</button>
@@ -131,7 +133,7 @@
         </div>
         <div class="card" id="locked"></div>
         <div class="card" id="paycard">
-          <div class="hint" id="summary">No attendees yet</div>
+          <div class="hint" id="summary">Add yourself as dentist or staff</div>
           <div class="total" id="total">Total $0.00</div>
           <button class="save" type="button" id="savebtn">Submit attendee list</button>
           <button class="go" type="button" id="paybtn" disabled>Pay on Clover after the list is submitted</button>
@@ -143,10 +145,12 @@
     const SAVE = 'https://sunbury-seminars-pay-preview.vercel.app/api/save-roster';
     const PAY = 'https://sunbury-seminars-pay-preview.vercel.app/api/create-checkout';
     const peopleEl = document.getElementById('people');
-    const extra = document.getElementById('buyerExtra');
     let n = 0, submitted = null, locked = false;
     document.querySelector('[name="payerIsFirst"]').onchange = (e) => {
-      extra.style.display = e.target.checked ? 'none' : 'block';
+      document.getElementById('buyerExtra').style.display = e.target.checked ? 'none' : 'block';
+    };
+    document.querySelector('[name="hasPractice"]').onchange = (e) => {
+      document.getElementById('practiceWrap').style.display = e.target.checked ? 'block' : 'none';
     };
     function addPerson(role) {
       if (locked) return;
@@ -155,7 +159,7 @@
       wrap.className = 'person';
       wrap.dataset.role = role;
       wrap.innerHTML = `
-        <div class="person-head"><span class="tag">${role === 'dentist' ? 'Dentist · $525' : 'Staff · $300'}</span>
+        <div class="person-head"><span class="tag">${n === 1 ? 'You · ' : ''}${role === 'dentist' ? 'Dentist · $525' : 'Staff · $300'}</span>
         <button type="button" class="remove">Remove</button></div>
         <div class="grid">
           <div><label>First name <i>*</i></label><input name="first-${n}" required></div>
@@ -192,16 +196,20 @@
       const list = roster();
       const d = list.filter(x => x.role === 'dentist').length;
       const s = list.filter(x => x.role === 'staff').length;
-      document.getElementById('summary').textContent = list.length ? `${list.length} attendee(s) · ${d} dentist · ${s} staff` : 'No attendees yet';
+      document.getElementById('summary').textContent = list.length ? `${list.length} attendee(s) · ${d} dentist · ${s} staff` : 'Add yourself as dentist or staff';
       document.getElementById('total').textContent = 'Total $' + totalOf(list).toFixed(2);
       document.getElementById('err').style.display = 'none';
+    }
+    function practiceName() {
+      const f = document.getElementById('form');
+      return f.hasPractice.checked ? f.practice.value.trim() : '';
     }
     function buyerOf(list) {
       const f = document.getElementById('form');
       if (f.payerIsFirst.checked && list[0]) {
-        return { first: list[0].first, last: list[0].last, email: list[0].email, phone: list[0].phone, practice: f.practice.value.trim(), attending: true };
+        return { first: list[0].first, last: list[0].last, email: list[0].email, phone: list[0].phone, practice: practiceName(), attending: true };
       }
-      return { first: f.buyerFirst.value.trim(), last: f.buyerLast.value.trim(), email: f.buyerEmail.value.trim(), phone: f.buyerPhone.value.trim(), practice: f.practice.value.trim(), attending: false };
+      return { first: f.buyerFirst.value.trim(), last: f.buyerLast.value.trim(), email: f.buyerEmail.value.trim(), phone: f.buyerPhone.value.trim(), practice: practiceName(), attending: false };
     }
     function showErr(t) {
       const err = document.getElementById('err');
@@ -210,8 +218,8 @@
     function valid() {
       const f = document.getElementById('form');
       const list = roster();
-      if (!f.practice.value.trim()) return showErr('Enter the practice name.'), false;
-      if (!list.length) return showErr('Add every person who is coming.'), false;
+      if (f.hasPractice.checked && !f.practice.value.trim()) return showErr('Enter the practice name or uncheck that box.'), false;
+      if (!list.length) return showErr('Add yourself as dentist or staff.'), false;
       if (list.some(p => !p.first || !p.last || !p.email || !p.phone || !p.street || !p.city || !p.state || !p.zip))
         return showErr('Every attendee field is required.'), false;
       if (!f.payerIsFirst.checked) {
@@ -222,14 +230,13 @@
     }
     document.getElementById('addDentist').onclick = () => addPerson('dentist');
     document.getElementById('addStaff').onclick = () => addPerson('staff');
-    addPerson('dentist');
     document.getElementById('savebtn').onclick = async () => {
       if (locked || !valid()) return;
       const people = roster();
       submitted = { buyer: buyerOf(people), people };
       locked = true;
       const box = document.getElementById('locked');
-      box.innerHTML = '<strong>List submitted</strong><p class="hint">Refresh the page only if you need to change names.</p><ul style="margin:.4rem 0 0;padding-left:1.1rem;">' +
+      box.innerHTML = '<strong>List submitted</strong><p class="hint">Refresh only if you need to change names.</p><ul style="margin:.4rem 0 0;padding-left:1.1rem;">' +
         people.map(p => `<li>${p.first} ${p.last} — ${p.role === 'staff' ? 'Staff $300' : 'Dentist $525'} — ${p.email}</li>`).join('') +
         '</ul><p style="margin:.7rem 0 0;">Clover will charge <strong>$' + totalOf(people).toFixed(2) + '</strong>. Receipt: ' + submitted.buyer.email + '</p>';
       document.getElementById('entry').classList.add('out');
