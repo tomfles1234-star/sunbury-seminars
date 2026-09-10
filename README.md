@@ -1,7 +1,8 @@
-# Sunbury Seminars
+# Sunbury Seminars, Inc.
 
-Professional one-page site for Sunbury Seminars, Inc. — Ohio dental CE in office anesthesia, sedation, and pharmacology.
+Official site repo. Register builds one locked Clover total. Class list belongs in OneDrive SSI_2026 (Microsoft Form).
 
-Open `index.html` locally, or enable GitHub Pages on this repo (`Settings → Pages → Deploy from main`).
+GitHub Pages: Settings → Pages → Deploy from **main**.
 
-Live domain `sunburyseminars.com` is still on Wix until DNS is pointed at Pages or the HTML is pasted into Wix.
+Clover function currently: https://sunbury-seminars-pay-preview.vercel.app/api/create-checkout
+Reconnect that Vercel project to this repo before deleting the preview repository.
