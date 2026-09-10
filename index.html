@@ -9,144 +9,141 @@
     html { scroll-behavior:smooth; }
     body {
       font-family: Georgia, "Times New Roman", serif;
-      color:#f4f1eb;
-      background-color:#4a5163;
-      background-image:
-        linear-gradient(rgba(40,45,58,.35), rgba(40,45,58,.2)),
-        repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 1px, transparent 1px 5px),
-        repeating-linear-gradient(0deg, rgba(0,0,0,.035) 0 1px, transparent 1px 5px);
-      line-height:1.5;
+      color:#f3efe6;
+      background:#454c5e;
+      line-height:1.55;
     }
-    .wrap { width:min(820px, calc(100% - 1.4rem)); margin:0 auto; padding:clamp(1.4rem, 4vw, 2.8rem) 0 4rem; }
-    h1 { text-align:center; font-size:clamp(2rem, 6.5vw, 3.5rem); font-weight:normal; margin:0 0 .9rem; letter-spacing:.01em; }
-    .nav { display:flex; gap:.55rem; flex-wrap:wrap; justify-content:center; margin:0 0 1.8rem; }
-    .btn { display:inline-block; text-align:center; text-decoration:none; font:700 .88rem/1 Arial, Helvetica, sans-serif; border-radius:8px; padding:.82rem 1.05rem; box-shadow:0 3px 0 rgba(0,0,0,.25); min-width:9rem; }
-    .gray { background:#e7e7e7; color:#222; }
-    .orange { background:#e67a28; color:#fff; }
-    .panel { background:rgba(20,24,34,.28); border:1px solid rgba(255,255,255,.12); border-radius:16px; padding:clamp(1rem, 3vw, 1.4rem) clamp(1rem, 3vw, 1.5rem); margin:0 0 1.35rem; }
-    h2 { font-size:clamp(1.3rem, 3.5vw, 1.65rem); font-weight:normal; margin:0 0 .65rem; }
-    h3 { font-size:1.02rem; margin:1.05rem 0 .35rem; color:#f0d7a8; font-family:Arial,sans-serif; letter-spacing:.04em; text-transform:uppercase; font-weight:700; }
-    p, li { font-size:clamp(1rem, 2.4vw, 1.12rem); }
-    .copy p { margin:0 0 .95rem; }
-    .pace { font-size:clamp(.7rem, 2vw, .8rem); opacity:.9; margin:1rem 0 0; }
-    .logo { text-align:center; margin:1.1rem 0 0; }
-    .logo-box { display:inline-block; background:#fff; color:#333; padding:.75rem 1rem; text-align:left; border-radius:4px; }
-    .logo-box b { display:block; font:800 1.45rem/1 Arial,sans-serif; }
-    .logo-box span { display:block; color:#1e73be; font:700 .68rem/1.2 Arial,sans-serif; }
-    .logo-box em { display:block; color:#e67a28; font:700 .68rem/1.2 Arial,sans-serif; font-style:normal; }
-    .meta { display:grid; grid-template-columns:1fr 1fr; gap:.8rem 1.2rem; margin:.4rem 0 1rem; }
-    .fees { display:flex; gap:.5rem; flex-wrap:wrap; margin:.5rem 0 1rem; }
-    .pill { background:#e67a28; color:#fff; font:700 .85rem Arial,sans-serif; padding:.45rem .75rem; border-radius:999px; }
-    .pill.alt { background:#e7e7e7; color:#222; }
-    .outline { list-style:none; }
-    .outline li { margin:.22rem 0; padding-left:0; }
-    .note { background:#fff6e8; border-left:4px solid #e67a28; color:#3a2a12; padding:.85rem 1rem; border-radius:0 10px 10px 0; font:600 .95rem/1.45 Arial,sans-serif; margin:0 0 1rem; }
-    .card { background:#fffcf7; color:#1c2430; border-radius:14px; padding:1.15rem; margin:0 0 .9rem; }
-    label { display:block; font:650 .78rem Arial,sans-serif; margin:.5rem 0 .22rem; }
-    label span { color:#c62828; }
-    input { width:100%; padding:.62rem .7rem; border:1px solid #d0d5dd; border-radius:8px; font:16px Arial,sans-serif; }
+    .bar { height:4px; background:#e67a28; }
+    .wrap { width:min(780px, calc(100% - 1.5rem)); margin:0 auto; padding:2rem 0 4rem; }
+    header { text-align:center; margin-bottom:1.6rem; }
+    h1 { font-size:clamp(2rem, 6vw, 3.2rem); font-weight:400; letter-spacing:.01em; }
+    .sub { font:500 .92rem/1.4 Arial,sans-serif; color:#cfc6b6; margin-top:.45rem; }
+    .nav { display:flex; justify-content:center; gap:.5rem; margin-top:1rem; }
+    .nav a {
+      font:700 .8rem/1 Arial,sans-serif; letter-spacing:.06em; text-transform:uppercase;
+      color:#f3efe6; text-decoration:none; border:1px solid rgba(255,255,255,.22);
+      padding:.55rem .9rem; border-radius:999px;
+    }
+    .nav a.hi { background:#e67a28; border-color:#e67a28; }
+    .block { margin:0 0 1.25rem; padding:1.35rem 1.3rem 1.4rem; background:rgba(255,255,255,.06); border-radius:18px; }
+    h2 { font-size:clamp(1.25rem, 3.2vw, 1.55rem); font-weight:400; margin:0 0 .75rem; }
+    h3 { font:700 .72rem/1 Arial,sans-serif; letter-spacing:.12em; text-transform:uppercase; color:#e0c48a; margin:1.1rem 0 .4rem; }
+    p { font-size:clamp(1.02rem, 2.3vw, 1.12rem); margin:0 0 .85rem; }
+    .pace { font-size:.78rem; color:#cfc6b6; }
+    .two { display:grid; grid-template-columns:1fr 1fr; gap:1rem 1.4rem; }
+    .fees { display:flex; gap:.45rem; flex-wrap:wrap; margin:.2rem 0 1rem; }
+    .fees span { font:700 .8rem Arial,sans-serif; padding:.4rem .75rem; border-radius:999px; }
+    .d { background:#e67a28; }
+    .s { background:#ece8e0; color:#222; }
+    .times { list-style:none; }
+    .times li { display:grid; grid-template-columns:9.2rem 1fr; gap:.6rem; padding:.35rem 0; border-bottom:1px solid rgba(255,255,255,.08); font-size:.98rem; }
+    .times b { font:700 .78rem/1.4 Arial,sans-serif; color:#e0c48a; font-weight:700; }
+    .card { background:#fff; color:#1d2430; border-radius:16px; padding:1.15rem; margin:0 0 .75rem; }
+    label { display:block; font:650 .75rem Arial,sans-serif; letter-spacing:.02em; margin:.45rem 0 .2rem; }
+    label i { color:#c62828; font-style:normal; }
+    input { width:100%; padding:.6rem .7rem; border:1px solid #d5d0c8; border-radius:8px; font:16px Arial,sans-serif; }
     .grid { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
-    .person { border:1px solid #e4ddd2; border-radius:10px; padding:.8rem; margin-top:.65rem; background:#fff; }
+    .person { border:1px solid #ece6dc; border-radius:12px; padding:.75rem; margin-top:.55rem; background:#faf8f4; }
     .person-head { display:flex; justify-content:space-between; align-items:center; }
-    .tag { font:700 .72rem Arial,sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#9a7840; }
-    button { font:700 .92rem Arial,sans-serif; cursor:pointer; border:0; border-radius:8px; padding:.72rem 1rem; }
-    .add { background:#ececec; margin:.45rem .35rem 0 0; }
-    .remove { background:transparent; color:#8a3a2a; }
-    .go { width:100%; background:#e67a28; color:#fff; margin-top:.7rem; padding:.9rem; }
-    .check { display:flex; gap:.5rem; align-items:flex-start; font:15px/1.35 Arial,sans-serif; margin-top:.75rem; }
+    .tag { font:700 .7rem Arial,sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#9a7840; }
+    button { font:700 .9rem Arial,sans-serif; border:0; border-radius:8px; padding:.7rem 1rem; cursor:pointer; }
+    .add { background:#ece8e0; margin:.5rem .35rem 0 0; }
+    .remove { background:none; color:#8a3a2a; }
+    .go { width:100%; background:#e67a28; color:#fff; margin-top:.65rem; padding:.9rem; }
+    .check { display:flex; gap:.5rem; align-items:flex-start; font:15px/1.35 Arial,sans-serif; margin-top:.7rem; }
     .check input { width:auto; margin-top:.15rem; }
-    .total { font-size:1.4rem; font-weight:700; }
+    .total { font-size:1.45rem; }
     .err { color:#8a3a2a; display:none; margin-top:.5rem; font:15px Arial,sans-serif; }
+    .hint { color:#5d6573; font:14.5px/1.45 Arial,sans-serif; margin:.3rem 0 .2rem; }
     @media (max-width:700px) {
-      .meta, .grid { grid-template-columns:1fr; }
-      .btn { flex:1; }
+      .two, .grid { grid-template-columns:1fr; }
+      .times li { grid-template-columns:1fr; gap:.15rem; }
     }
   </style>
 </head>
 <body>
+  <div class="bar"></div>
   <div class="wrap">
-    <h1>Sunbury Seminars, Inc.</h1>
-    <nav class="nav">
-      <a class="btn gray" href="#course">Course</a>
-      <a class="btn orange" href="#register">Register</a>
-    </nav>
+    <header>
+      <h1>Sunbury Seminars, Inc.</h1>
+      <p class="sub">Dental continuing education &middot; Ohio &middot; Anesthesia and pharmacology</p>
+      <nav class="nav">
+        <a href="#course">Course</a>
+        <a class="hi" href="#register">Register</a>
+      </nav>
+    </header>
 
-    <div class="panel copy">
+    <section class="block">
       <p>Sunbury Seminars, Inc., is a proud sponsor of Dental Continuing Education in the state of Ohio. We focus primarily in the areas of pain and anxiety control (minimal to moderate sedation and deep/general anesthesia) and pharmacology.</p>
       <p>Our mission is to provide the highest quality continuing education to the dental practitioner.</p>
       <p>Our courses present contemporary information which has relevance and clinical practicality for the dentist and is taught by experts in their field who practice what they teach on a daily basis.</p>
       <p>Sincerely,<br>Carl R. Fleser, D.D.S., M.S.<br>President, Sunbury Seminars, Inc.</p>
-      <p class="pace">**Sunbury Seminars, Inc. is a locally approved PACE Program Provider for FAGD/MAGD credit. Approval does not imply acceptance by any regulatory authority or AGD endorsement. Provider ID# 217615. Approval period: 4/1/2026 &ndash; 3/31/2028.**</p>
-      <div class="logo"><div class="logo-box"><b>PACE</b><span>ACADEMY of GENERAL DENTISTRY</span><em>PROGRAM APPROVAL FOR CONTINUING EDUCATION</em></div></div>
-    </div>
+      <p class="pace">Sunbury Seminars, Inc. is a locally approved PACE Program Provider for FAGD/MAGD credit. Approval does not imply acceptance by any regulatory authority or AGD endorsement. Provider ID# 217615. Approval period: 4/1/2026 &ndash; 3/31/2028.</p>
+    </section>
 
-    <section class="panel" id="course">
-      <h2>Upcoming Course</h2>
+    <section class="block" id="course">
+      <h2>October 24, 2026</h2>
       <p><strong>Current Concepts in Office Anesthesia</strong><br>
-      Adult and Pediatric Moderate to Deep Sedation and General Anesthesia</p>
-      <p>CE Credits: 7 Hours Dental CE AGD PACE</p>
-      <div class="meta">
+      Adult and Pediatric Moderate to Deep Sedation and General Anesthesia<br>
+      7 hours dental CE &middot; AGD PACE</p>
+      <div class="two">
         <div>
           <h3>When</h3>
-          <p>Saturday, October 24, 2026<br>8:00 AM to 4:30 PM</p>
+          <p>Saturday, 8:00 AM &ndash; 4:30 PM</p>
         </div>
         <div>
           <h3>Where</h3>
           <p>Quest Conference Center<br>9200 Worthington Rd, Suite 400<br>Westerville, Ohio 43082<br>614-540-5540</p>
         </div>
       </div>
-      <div class="fees">
-        <span class="pill">Dentist $525</span>
-        <span class="pill alt">Staff $300</span>
-      </div>
-      <p>Includes continental breakfast and lunch. Fees are per person.</p>
-      <h3>Outline</h3>
-      <ul class="outline">
-        <li>7:30 &ndash; 8:00 AM &mdash; Registration and Breakfast</li>
-        <li>8:00 &ndash; 9:00 AM &mdash; Basic ECG Review and Interpretation</li>
-        <li>9:00 &ndash; 10:00 AM &mdash; Airway and Pharmacologic Adjuncts (Adult and Pediatric)</li>
-        <li>10:00 &ndash; 10:15 AM &mdash; Break</li>
-        <li>10:15 &ndash; 10:45 AM &mdash; Updated Ohio Rules and Regulations: Pediatric / Moderate / Deep / General Anesthesia</li>
-        <li>10:45 &ndash; 12:00 PM &mdash; Oral Sedation / Moderate Sedation Options and Limitations</li>
-        <li>12:00 &ndash; 1:00 PM &mdash; Lunch</li>
-        <li>1:00 &ndash; 2:00 PM &mdash; Anesthetic Hypertension and Hypotension Issues</li>
-        <li>2:00 &ndash; 3:00 PM &mdash; Reversal Agents, OUD Treatments and Patient Considerations</li>
-        <li>3:00 &ndash; 3:15 PM &mdash; Break</li>
-        <li>3:15 &ndash; 4:00 PM &mdash; Adult and Pediatric Clinical Case Presentations</li>
+      <div class="fees"><span class="d">Dentist $525</span><span class="s">Staff $300</span></div>
+      <p>Per person. Breakfast and lunch included. One office can register everyone below and pay once.</p>
+      <h3>Schedule</h3>
+      <ul class="times">
+        <li><b>7:30&ndash;8:00</b><span>Registration and breakfast</span></li>
+        <li><b>8:00&ndash;9:00</b><span>Basic ECG review and interpretation</span></li>
+        <li><b>9:00&ndash;10:00</b><span>Airway and pharmacologic adjuncts (adult and pediatric)</span></li>
+        <li><b>10:00&ndash;10:15</b><span>Break</span></li>
+        <li><b>10:15&ndash;10:45</b><span>Updated Ohio rules: pediatric / moderate / deep / general anesthesia</span></li>
+        <li><b>10:45&ndash;12:00</b><span>Oral sedation / moderate sedation options and limitations</span></li>
+        <li><b>12:00&ndash;1:00</b><span>Lunch</span></li>
+        <li><b>1:00&ndash;2:00</b><span>Anesthetic hypertension and hypotension</span></li>
+        <li><b>2:00&ndash;3:00</b><span>Reversal agents, OUD treatments, patient considerations</span></li>
+        <li><b>3:00&ndash;3:15</b><span>Break</span></li>
+        <li><b>3:15&ndash;4:00</b><span>Adult and pediatric clinical cases</span></li>
       </ul>
       <h3>Speakers</h3>
       <p>Dr. Carl R. Fleser, D.D.S., M.S. &mdash; Course Director; Clinical Assistant Professor, The Ohio State University College of Dentistry; Director, Ambulatory Anesthesia Group, Inc.</p>
       <p>Dr. Bryant W. Cornelius, D.D.S., M.P.H., M.B.A. &mdash; Clinical Assistant Professor, The Ohio State University College of Dentistry; Ambulatory Anesthesia Group, Inc.</p>
     </section>
 
-    <section class="panel" id="register">
+    <section class="block" id="register">
       <h2>Register</h2>
-      <p>Use this form for one person or for the whole office. Add every attendee who is coming. Each attendee needs their own name, email, and phone. One office can submit once and pay one locked Clover total.</p>
-      <div class="note">Every attendee must be listed here before you pay. A name that is not on this form is not registered. When the Microsoft Form / SSI_2026 OneDrive file is connected, these same rows become the Excel class list. Until then this form is what Clover charges against.</div>
+      <p>Complete the fields on this page. One person or a whole office. Add a row for every attendee. Payment is separate, on Clover, as one locked total.</p>
       <form id="form">
         <div class="card">
           <strong>Who is paying</strong>
           <div class="grid">
-            <div><label>First name <span>*</span></label><input name="buyerFirst" required></div>
-            <div><label>Last name <span>*</span></label><input name="buyerLast" required></div>
+            <div><label>First name <i>*</i></label><input name="buyerFirst" required></div>
+            <div><label>Last name <i>*</i></label><input name="buyerLast" required></div>
           </div>
-          <label>Practice <span>*</span></label><input name="practice" required>
+          <label>Practice <i>*</i></label><input name="practice" required>
           <div class="grid">
-            <div><label>Email for the receipt <span>*</span></label><input type="email" name="buyerEmail" required></div>
-            <div><label>Phone <span>*</span></label><input type="tel" name="buyerPhone" required></div>
+            <div><label>Receipt email <i>*</i></label><input type="email" name="buyerEmail" required></div>
+            <div><label>Phone <i>*</i></label><input type="tel" name="buyerPhone" required></div>
           </div>
-          <label class="check"><input type="checkbox" name="buyerAttending"><span>I am also attending. Still add my row as dentist or staff below.</span></label>
+          <label class="check"><input type="checkbox" name="buyerAttending"><span>I am attending. Add my dentist or staff row below.</span></label>
         </div>
         <div class="card">
-          <strong>Attendees &mdash; one or many</strong>
-          <p style="color:#5d6b79;font:15px Arial,sans-serif;margin:.35rem 0 .2rem;">Click + Dentist or + Staff for each extra person from the same office.</p>
+          <strong>Attendees</strong>
+          <p class="hint">Every person coming needs a row. Use + Dentist or + Staff for more people from the same office.</p>
           <div id="people"></div>
           <button type="button" class="add" id="addDentist">+ Dentist $525</button>
           <button type="button" class="add" id="addStaff">+ Staff $300</button>
           <p class="err" id="err"></p>
         </div>
         <div class="card">
-          <div id="summary" style="color:#5d6b79;font:15px Arial,sans-serif;">No attendees yet</div>
+          <div class="hint" id="summary">No attendees yet</div>
           <div class="total" id="total">Total $0.00</div>
           <button class="go" type="submit" id="paybtn">Pay this total on Clover</button>
         </div>
@@ -155,7 +152,6 @@
   </div>
   <script>
     const API = 'https://sunbury-seminars-pay-preview.vercel.app/api/create-checkout';
-    const PRICE = { dentist: 525, staff: 300 };
     const peopleEl = document.getElementById('people');
     let n = 0;
     function addPerson(role) {
@@ -169,12 +165,12 @@
           <button type="button" class="remove">Remove</button>
         </div>
         <div class="grid">
-          <div><label>First name <span>*</span></label><input name="first-${n}" required></div>
-          <div><label>Last name <span>*</span></label><input name="last-${n}" required></div>
+          <div><label>First name <i>*</i></label><input name="first-${n}" required></div>
+          <div><label>Last name <i>*</i></label><input name="last-${n}" required></div>
         </div>
         <div class="grid">
-          <div><label>Email <span>*</span></label><input type="email" name="email-${n}" required></div>
-          <div><label>Phone <span>*</span></label><input name="phone-${n}" required></div>
+          <div><label>Email <i>*</i></label><input type="email" name="email-${n}" required></div>
+          <div><label>Phone <i>*</i></label><input name="phone-${n}" required></div>
         </div>`;
       wrap.querySelector('.remove').onclick = () => { wrap.remove(); tally(); };
       peopleEl.appendChild(wrap);
@@ -186,17 +182,14 @@
         first: p.querySelector('[name^="first"]').value.trim(),
         last: p.querySelector('[name^="last"]').value.trim(),
         email: p.querySelector('[name^="email"]').value.trim().toLowerCase(),
-        phone: p.querySelector('[name^="phone"]').value.trim(),
-        price: PRICE[p.dataset.role]
+        phone: p.querySelector('[name^="phone"]').value.trim()
       }));
     }
     function tally() {
       const list = roster();
       const d = list.filter(x => x.role === 'dentist').length;
       const s = list.filter(x => x.role === 'staff').length;
-      document.getElementById('summary').textContent = list.length
-        ? `${list.length} attendee(s) · ${d} dentist · ${s} staff`
-        : 'No attendees yet';
+      document.getElementById('summary').textContent = list.length ? `${list.length} attendee(s) · ${d} dentist · ${s} staff` : 'No attendees yet';
       document.getElementById('total').textContent = 'Total $' + (d * 525 + s * 300).toFixed(2);
       document.getElementById('err').style.display = 'none';
     }
@@ -209,24 +202,15 @@
       const err = document.getElementById('err');
       const show = (t) => { err.textContent = t; err.style.display = 'block'; };
       const btn = document.getElementById('paybtn');
-      if (!list.length) return show('Add every person who is coming.');
-      if (list.some(p => !p.first || !p.last || !p.email || !p.phone)) return show('Every attendee field is required.');
+      if (!list.length || list.some(p => !p.first || !p.last || !p.email || !p.phone)) return show('Every attendee field is required.');
       const f = e.target;
-      btn.disabled = true;
-      btn.textContent = 'Opening Clover…';
+      btn.disabled = true; btn.textContent = 'Opening Clover…';
       try {
         const r = await fetch(API, {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({
-            buyer: {
-              first: f.buyerFirst.value.trim(),
-              last: f.buyerLast.value.trim(),
-              email: f.buyerEmail.value.trim(),
-              phone: f.buyerPhone.value.trim(),
-              practice: f.practice.value.trim(),
-              attending: f.buyerAttending.checked
-            },
+            buyer: { first: f.buyerFirst.value.trim(), last: f.buyerLast.value.trim(), email: f.buyerEmail.value.trim(), phone: f.buyerPhone.value.trim(), practice: f.practice.value.trim(), attending: f.buyerAttending.checked },
             people: list
           })
         });
@@ -235,8 +219,7 @@
         location.href = data.href;
       } catch (ex) {
         show(ex.message);
-        btn.disabled = false;
-        btn.textContent = 'Pay this total on Clover';
+        btn.disabled = false; btn.textContent = 'Pay this total on Clover';
       }
     };
   </script>
