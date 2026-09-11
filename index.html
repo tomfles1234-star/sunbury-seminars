@@ -34,7 +34,7 @@
     .card { background:#fff; color:#1d2430; border-radius:16px; padding:1.15rem; margin:0 0 .75rem; }
     label { display:block; font:650 .75rem Arial,sans-serif; margin:.45rem 0 .2rem; }
     label i { color:#c62828; font-style:normal; }
-    input { width:100%; padding:.6rem .7rem; border:1px solid #d5d0c8; border-radius:8px; font:16px Arial,sans-serif; }
+    input, select { width:100%; padding:.6rem .7rem; border:1px solid #d5d0c8; border-radius:8px; font:16px Arial,sans-serif; background:#fff; }
     .grid { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
     .grid3 { display:grid; grid-template-columns:1.4fr .6fr .7fr; gap:.5rem; }
     .person { border:1px solid #ece6dc; border-radius:12px; padding:.75rem; margin-top:.55rem; background:#faf8f4; }
@@ -131,8 +131,41 @@
   <script>
     const SAVE = 'https://sunbury-seminars-pay-preview.vercel.app/api/save-roster';
     const PAY = 'https://sunbury-seminars-pay-preview.vercel.app/api/create-checkout';
+    const STATES = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'];
     const peopleEl = document.getElementById('people');
     let n = 0, submitted = null, locked = false;
+    function stateOptions() {
+      return '<option value="">ST</option>' + STATES.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+    function formatPhone(v) {
+      const d = String(v || '').replace(/\D/g, '').slice(0, 10);
+      if (d.length < 4) return d;
+      if (d.length < 7) return d.slice(0, 3) + '-' + d.slice(3);
+      return d.slice(0, 3) + '-' + d.slice(3, 6) + '-' + d.slice(6);
+    }
+    async function fillZip(wrap) {
+      const street = wrap.querySelector('[name^="street"]').value.trim();
+      const city = wrap.querySelector('[name^="city"]').value.trim();
+      const state = wrap.querySelector('[name^="state"]').value.trim();
+      const zipEl = wrap.querySelector('[name^="zip"]');
+      if (!city || !state || zipEl.dataset.manual === '1') return;
+      try {
+        if (street) {
+          const q = encodeURIComponent(`${street}, ${city}, ${state}, USA`);
+          const r = await fetch('https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&countrycodes=us&q=' + q, { headers: { 'Accept-Language': 'en' } });
+          if (r.ok) {
+            const rows = await r.json();
+            const post = rows[0] && rows[0].address && (rows[0].address.postcode || '').slice(0, 5);
+            if (/^\d{5}$/.test(post)) { zipEl.value = post; return; }
+          }
+        }
+        const z = await fetch('https://api.zippopotam.us/us/' + state + '/' + encodeURIComponent(city));
+        if (!z.ok) return;
+        const data = await z.json();
+        const places = data.places || [];
+        if (places[0] && places[0]['post code']) zipEl.value = places[0]['post code'];
+      } catch (e) {}
+    }
     function addPerson(role) {
       if (locked) return;
       n += 1;
@@ -148,15 +181,25 @@
         </div>
         <div class="grid">
           <div><label>Email <i>*</i></label><input type="email" name="email-${n}" required></div>
-          <div><label>Phone <i>*</i></label><input name="phone-${n}" required></div>
+          <div><label>Phone <i>*</i></label><input name="phone-${n}" inputmode="tel" autocomplete="tel" maxlength="12" required></div>
         </div>
-        <label>Home street <i>*</i></label><input name="street-${n}" required>
+        <label>Address <i>*</i></label><input name="street-${n}" autocomplete="street-address" required>
         <div class="grid3">
-          <div><label>City <i>*</i></label><input name="city-${n}" required></div>
-          <div><label>State <i>*</i></label><input name="state-${n}" required maxlength="2"></div>
-          <div><label>ZIP <i>*</i></label><input name="zip-${n}" required></div>
+          <div><label>City <i>*</i></label><input name="city-${n}" autocomplete="address-level2" required></div>
+          <div><label>State <i>*</i></label><select name="state-${n}" required>${stateOptions()}</select></div>
+          <div><label>ZIP <i>*</i></label><input name="zip-${n}" inputmode="numeric" maxlength="10" required></div>
         </div>`;
       wrap.querySelector('.remove').onclick = () => { if (!locked) { wrap.remove(); tally(); } };
+      wrap.querySelector('[name^="phone"]').addEventListener('input', (e) => {
+        e.target.value = formatPhone(e.target.value);
+      });
+      wrap.querySelector('[name^="zip"]').addEventListener('input', (e) => {
+        if (e.target.value.trim()) e.target.dataset.manual = '1';
+      });
+      ['street', 'city', 'state'].forEach((key) => {
+        wrap.querySelector('[name^="' + key + '"]').addEventListener('change', () => fillZip(wrap));
+        wrap.querySelector('[name^="' + key + '"]').addEventListener('blur', () => fillZip(wrap));
+      });
       peopleEl.appendChild(wrap); tally();
     }
     function roster() {
