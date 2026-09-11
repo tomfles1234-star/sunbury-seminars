@@ -24,6 +24,7 @@
     .pace-box { background:#fff; border-radius:12px; padding:.85rem 1rem; margin:1rem 0 0; text-align:center; }
     .pace-box img { width:min(260px, 100%); height:auto; display:block; margin:0 auto .55rem; }
     .two { display:grid; grid-template-columns:1fr 1fr; gap:1rem 1.4rem; }
+    .cal { display:inline-block; margin:.15rem 0 1rem; font:700 .8rem/1 Arial,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#f3efe6; text-decoration:none; border:1px solid rgba(255,255,255,.22); padding:.55rem .9rem; border-radius:999px; }
     .fees { display:flex; gap:.45rem; flex-wrap:wrap; margin:.2rem 0 1rem; }
     .fees span { font:700 .8rem Arial,sans-serif; padding:.4rem .75rem; border-radius:999px; }
     .d { background:#e67a28; } .s { background:#ece8e0; color:#222; }
@@ -48,6 +49,8 @@
     .total { font-size:1.45rem; }
     .err { color:#8a3a2a; display:none; margin-top:.5rem; font:15px Arial,sans-serif; }
     .hint { color:#5d6573; font:14.5px/1.45 Arial,sans-serif; margin:.3rem 0 .2rem; }
+    #summary { display:none; }
+    #summary.on { display:block; }
     #locked { display:none; }
     #entry.out { opacity:0; transform:translateY(-8px); transition:.45s ease; pointer-events:none; max-height:0; overflow:hidden; margin:0; padding:0; }
     #locked.in { display:block; animation:pop .45s ease; }
@@ -81,6 +84,7 @@
         <div><h3>When</h3><p>Saturday, October 24, 2026<br>8:00 AM &ndash; 4:30 PM</p></div>
         <div><h3>Where</h3><p>Quest Conference Center<br>9200 Worthington Rd, Suite 400<br>Westerville, Ohio 43082<br>614-540-5540</p></div>
       </div>
+      <a class="cal" href="course.ics">Add to calendar</a>
       <div class="fees"><span class="d">Dentist $525</span><span class="s">Staff $300</span></div>
       <p>Per person. Breakfast and lunch included.</p>
       <h3>Schedule</h3>
@@ -116,7 +120,7 @@
         </div>
         <div class="card" id="locked"></div>
         <div class="card" id="paycard">
-          <div class="hint" id="summary">Add yourself as dentist or staff</div>
+          <div class="hint" id="summary"></div>
           <div class="total" id="total">Total $0.00</div>
           <button class="save" type="button" id="savebtn">Submit attendee list</button>
           <button class="go" type="button" id="paybtn" disabled>Pay on Clover after the list is submitted</button>
@@ -173,7 +177,14 @@
       const list = roster();
       const d = list.filter(x => x.role === 'dentist').length;
       const s = list.filter(x => x.role === 'staff').length;
-      document.getElementById('summary').textContent = list.length ? `${list.length} attendee(s) · ${d} dentist · ${s} staff` : 'Add yourself as dentist or staff';
+      const sum = document.getElementById('summary');
+      if (list.length) {
+        sum.textContent = `${list.length} attendee(s) · ${d} dentist · ${s} staff`;
+        sum.classList.add('on');
+      } else {
+        sum.textContent = '';
+        sum.classList.remove('on');
+      }
       document.getElementById('total').textContent = 'Total $' + totalOf(list).toFixed(2);
       document.getElementById('err').style.display = 'none';
     }
@@ -187,7 +198,7 @@
     }
     function valid() {
       const list = roster();
-      if (!list.length) return showErr('Add yourself as dentist or staff.'), false;
+      if (!list.length) return showErr('Add at least one dentist or staff.'), false;
       if (list.some(p => !p.first || !p.last || !p.email || !p.phone || !p.street || !p.city || !p.state || !p.zip))
         return showErr('Every attendee field is required.'), false;
       return true;
