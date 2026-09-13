@@ -103,7 +103,7 @@
       </ul>
       <h3>Speakers</h3>
       <p>Dr. Carl R. Fleser, D.D.S., M.S. &mdash; Course Director; Clinical Assistant Professor, The Ohio State University College of Dentistry; Director, Ambulatory Anesthesia Group, Inc.</p>
-      <p>Dr. Bryant W. Cornelius, D.D.S., M.P.H., M.B.A. &mdash; Clinical Assistant Professor, The Ohio State University College of Dentistry; Ambulatory Anesthesia Group, Inc.</p>
+      <p>Dr. Bryant W. Cornelius, D.D.S., M.P.H., M.B.A. &mdash; Clinical Assistant Professor, The Ohio State University College of Dentistry; Chief Anesthesiologist, Blue Cloud Cleveland Children's Surgery Center.</p>
     </section>
     <section class="block" id="register">
       <h2>Register</h2>
@@ -173,7 +173,7 @@
       wrap.className = 'person';
       wrap.dataset.role = role;
       wrap.innerHTML = `
-        <div class="person-head"><span class="tag">${n === 1 ? 'You · ' : ''}${role === 'dentist' ? 'Dentist · $525' : 'Staff · $300'}</span>
+        <div class="person-head"><span class="tag">${n === 1 ? 'You \u00b7 ' : ''}${role === 'dentist' ? 'Dentist \u00b7 $525' : 'Staff \u00b7 $300'}</span>
         <button type="button" class="remove">Remove</button></div>
         <div class="grid">
           <div><label>First name <i>*</i></label><input name="first-${n}" required></div>
@@ -222,7 +222,7 @@
       const s = list.filter(x => x.role === 'staff').length;
       const sum = document.getElementById('summary');
       if (list.length) {
-        sum.textContent = `${list.length} attendee(s) · ${d} dentist · ${s} staff`;
+        sum.textContent = `${list.length} attendee(s) \u00b7 ${d} dentist \u00b7 ${s} staff`;
         sum.classList.add('on');
       } else {
         sum.textContent = '';
@@ -276,7 +276,7 @@
     document.getElementById('paybtn').onclick = async () => {
       if (!submitted) return showErr('Submit the attendee list first.');
       const btn = document.getElementById('paybtn');
-      btn.disabled = true; btn.textContent = 'Opening Clover…';
+      btn.disabled = true; btn.textContent = 'Opening Clover\u2026';
       try {
         const r = await fetch(PAY, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(submitted) });
         const data = await r.json();
