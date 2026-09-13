@@ -14,7 +14,8 @@
     h1 { font-size:clamp(2rem, 6vw, 3.2rem); font-weight:400; }
     .sub { font:500 .92rem/1.4 Arial,sans-serif; color:#cfc6b6; margin-top:.45rem; }
     .nav { display:flex; justify-content:center; gap:.5rem; margin-top:1rem; }
-    .nav a { font:700 .8rem/1 Arial,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#f3efe6; text-decoration:none; border:1px solid rgba(255,255,255,.22); padding:.55rem .9rem; border-radius:999px; }
+    .nav a { font:700 .8rem/1 Arial,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#f3efe6; text-decoration:none; border:1px solid rgba(255,255,255,.35); padding:.55rem .9rem; border-radius:999px; background:rgba(255,255,255,.08); box-shadow:0 2px 0 rgba(0,0,0,.18); }
+    .nav a:hover { background:#e67a28; border-color:#e67a28; }
     .nav a.hi { background:#e67a28; border-color:#e67a28; }
     .block { margin:0 0 1.25rem; padding:1.35rem 1.3rem 1.4rem; background:rgba(255,255,255,.06); border-radius:18px; }
     h2 { font-size:clamp(1.25rem, 3.2vw, 1.55rem); font-weight:400; margin:0 0 .75rem; }
@@ -24,10 +25,11 @@
     .pace-box { background:#fff; border-radius:12px; padding:.85rem 1rem; margin:1rem 0 0; text-align:center; }
     .pace-box img { width:min(260px, 100%); height:auto; display:block; margin:0 auto .55rem; }
     .two { display:grid; grid-template-columns:1fr 1fr; gap:1rem 1.4rem; }
-    .cal { display:inline-block; margin:.15rem 0 1rem; font:700 .8rem/1 Arial,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#f3efe6; text-decoration:none; border:1px solid rgba(255,255,255,.22); padding:.55rem .9rem; border-radius:999px; }
-    .fees { display:flex; gap:.45rem; flex-wrap:wrap; margin:.2rem 0 1rem; }
-    .fees span { font:700 .8rem Arial,sans-serif; padding:.4rem .75rem; border-radius:999px; }
-    .d { background:#e67a28; } .s { background:#ece8e0; color:#222; }
+    .cal { display:inline-block; margin:.15rem 0 1rem; font:700 .8rem/1 Arial,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#fff; text-decoration:none; border:0; padding:.6rem 1rem; border-radius:999px; background:#e67a28; box-shadow:0 3px 0 #b85a18; }
+    .cal:hover { filter:brightness(1.06); }
+    .fees { margin:.15rem 0 .85rem; font:700 1.05rem/1.45 Georgia,serif; }
+    .fees span { padding:0; border-radius:0; background:none; }
+    .d { color:#f3efe6; } .s { color:#f3efe6; }
     .times { list-style:none; }
     .times li { display:grid; grid-template-columns:9.2rem 1fr; gap:.6rem; padding:.35rem 0; border-bottom:1px solid rgba(255,255,255,.08); font-size:.98rem; }
     .times b { font:700 .78rem/1.4 Arial,sans-serif; color:#e0c48a; }
@@ -40,12 +42,15 @@
     .person { border:1px solid #ece6dc; border-radius:12px; padding:.75rem; margin-top:.55rem; background:#faf8f4; }
     .person-head { display:flex; justify-content:space-between; align-items:center; }
     .tag { font:700 .7rem Arial,sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#9a7840; }
-    button { font:700 .9rem Arial,sans-serif; border:0; border-radius:8px; padding:.7rem 1rem; cursor:pointer; }
-    .add { background:#ece8e0; margin:.5rem .35rem 0 0; }
-    .remove { background:none; color:#8a3a2a; }
-    .go { width:100%; background:#e67a28; color:#fff; margin-top:.55rem; padding:.9rem; }
-    .go:disabled { background:#c9b8a4; cursor:not-allowed; }
-    .save { width:100%; background:#3d4558; color:#fff; margin-top:.65rem; padding:.9rem; }
+    button { font:700 .9rem Arial,sans-serif; border:0; border-radius:10px; padding:.75rem 1.05rem; cursor:pointer; }
+    .add { background:#e67a28; color:#fff; margin:.5rem .35rem 0 0; box-shadow:0 3px 0 #b85a18; }
+    .add:hover { filter:brightness(1.06); }
+    .remove { background:none; color:#8a3a2a; box-shadow:none; }
+    .go { width:100%; background:#e67a28; color:#fff; margin-top:.55rem; padding:.95rem; box-shadow:0 3px 0 #b85a18; }
+    .go:hover:not(:disabled) { filter:brightness(1.06); }
+    .go:disabled { background:#c9b8a4; cursor:not-allowed; box-shadow:none; }
+    .save { width:100%; background:#2f3646; color:#fff; margin-top:.65rem; padding:.95rem; box-shadow:0 3px 0 #1b202b; }
+    .save:hover { filter:brightness(1.08); }
     .total { font-size:1.45rem; }
     .err { color:#8a3a2a; display:none; margin-top:.5rem; font:15px Arial,sans-serif; }
     .hint { color:#5d6573; font:14.5px/1.45 Arial,sans-serif; margin:.3rem 0 .2rem; }
@@ -85,7 +90,7 @@
         <div><h3>Where</h3><p>Quest Conference Center<br>9200 Worthington Rd, Suite 400<br>Westerville, Ohio 43082<br>614-540-5540</p></div>
       </div>
       <a class="cal" href="course.ics">Add to calendar</a>
-      <div class="fees"><span class="d">Dentist $525</span><span class="s">Staff $300</span></div>
+      <p class="fees"><span class="d">Dentist $525</span> &nbsp;&middot;&nbsp; <span class="s">Staff $300</span></p>
       <p>Per person. Breakfast and lunch included.</p>
       <h3>Schedule</h3>
       <ul class="times">
