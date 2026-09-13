@@ -1,17 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 727" role="img" aria-label="AGD PACE Academy of General Dentistry Program Approval for Continuing Education">
-  <rect width="1500" height="727" fill="#000"/>
-  <g transform="translate(30,55)">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 700" role="img" aria-label="AGD PACE Academy of General Dentistry Program Approval for Continuing Education">
+  <rect width="1120" height="700" fill="#000"/>
+  <g transform="translate(36,70)">
     <path fill="#8a8a8a" d="M186 6 L40 428 H96 L126 336 H246 L276 428 H332 L186 6 Z"/>
     <path fill="#000" d="M186 118 L150 236 H222 Z"/>
     <path fill="#8a8a8a" d="M12 300 C92 252 186 238 360 278 C368 292 368 292 360 306 C190 268 104 280 24 326 Z"/>
     <path fill="#00a0e3" d="M8 332 C100 276 204 260 392 308 C400 322 400 322 392 336 C208 290 114 304 22 360 Z"/>
     <path fill="#f15a22" d="M6 364 C112 300 226 284 424 338 C432 352 432 352 424 366 C230 314 126 328 20 394 Z"/>
   </g>
-  <rect x="430" y="88" width="5" height="530" fill="#6e6e6e"/>
-  <text x="468" y="248" font-family="Arial, Helvetica, sans-serif" font-size="170" font-weight="700" fill="#8a8a8a">PACE</text>
-  <text x="468" y="328" font-family="Arial, Helvetica, sans-serif" font-size="46" font-weight="700" fill="#00a0e3">ACADEMY <tspan font-size="28" font-weight="600" dx="-4">of</tspan></text>
-  <text x="468" y="386" font-family="Arial, Helvetica, sans-serif" font-size="46" font-weight="700" fill="#00a0e3">GENERAL DENTISTRY</text>
-  <text x="468" y="468" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700" fill="#f15a22">PROGRAM APPROVAL</text>
-  <text x="468" y="526" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700" fill="#f15a22">FOR CONTINUING</text>
-  <text x="468" y="584" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700" fill="#f15a22">EDUCATION</text>
+  <rect x="436" y="96" width="5" height="500" fill="#6e6e6e"/>
+  <text x="474" y="248" font-family="Arial, Helvetica, sans-serif" font-size="168" font-weight="700" fill="#8a8a8a">PACE</text>
+  <text x="474" y="328" font-family="Arial, Helvetica, sans-serif" font-size="46" font-weight="700" fill="#00a0e3">ACADEMY <tspan font-size="28" font-weight="600" dx="-4">of</tspan></text>
+  <text x="474" y="386" font-family="Arial, Helvetica, sans-serif" font-size="46" font-weight="700" fill="#00a0e3">GENERAL DENTISTRY</text>
+  <text x="474" y="468" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700" fill="#f15a22">PROGRAM APPROVAL</text>
+  <text x="474" y="526" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700" fill="#f15a22">FOR CONTINUING</text>
+  <text x="474" y="584" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700" fill="#f15a22">EDUCATION</text>
 </svg>
