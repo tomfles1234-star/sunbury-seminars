@@ -33,7 +33,7 @@
     .times { list-style:none; }
     .times li { display:grid; grid-template-columns:9.2rem 1fr; gap:.6rem; padding:.35rem 0; border-bottom:1px solid rgba(255,255,255,.08); font-size:.98rem; }
     .times b { font:700 .78rem/1.4 Arial,sans-serif; color:#e0c48a; }
-    .card { background:rgba(255,255,255,.06); color:#f3efe6; border-radius:16px; padding:1.15rem; margin:0 0 .75rem; }
+    .card { background:transparent; color:#f3efe6; border-radius:16px; padding:1.15rem 0; margin:0; }
     label { display:block; font:650 .75rem Arial,sans-serif; margin:.45rem 0 .2rem; }
     label i { color:#c62828; font-style:normal; }
     input, select { width:100%; padding:.6rem .7rem; border:1px solid #d5d0c8; border-radius:8px; font:16px Arial,sans-serif; background:#fff; }
@@ -48,9 +48,9 @@
     .remove { background:none; color:#e0c48a; box-shadow:none; }
     .go { width:100%; background:#e67a28; color:#fff; margin-top:.55rem; padding:.95rem; box-shadow:0 3px 0 #b85a18; }
     .go:hover:not(:disabled) { filter:brightness(1.06); }
-    .go:disabled { background:#c9b8a4; cursor:not-allowed; box-shadow:none; }
-    .save { width:100%; background:#2f3646; color:#fff; margin-top:.65rem; padding:.95rem; box-shadow:0 3px 0 #1b202b; }
-    .save:hover { filter:brightness(1.08); }
+    .go:disabled { background:rgba(255,255,255,.08); color:#cfc6b6; cursor:not-allowed; box-shadow:none; }
+    .save { width:100%; background:#e67a28; color:#fff; margin-top:.65rem; padding:.95rem; box-shadow:0 3px 0 #b85a18; }
+    .save:hover { filter:brightness(1.06); }
     .total { font-size:1.45rem; }
     .err { color:#ffb4a8; display:none; margin-top:.5rem; font:15px Arial,sans-serif; }
     .hint { color:#cfc6b6; font:14.5px/1.45 Arial,sans-serif; margin:.3rem 0 .2rem; }
