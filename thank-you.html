@@ -5,40 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sunbury Seminars</title>
   <style>
-    body { margin:0; font-family:Georgia,serif; background:#454c5e; color:#f3efe6; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:Georgia, "Times New Roman", serif; background:#454c5e; color:#f3efe6; min-height:100vh; }
     .bar { height:4px; background:#e67a28; }
-    .box { width:min(480px, calc(100% - 2rem)); margin:5rem auto; text-align:center; }
-    h1 { font-weight:400; font-size:2rem; margin:0 0 1.2rem; }
-    p { font:16px/1.5 Arial,sans-serif; color:#cfc6b6; margin:0 0 1.4rem; }
+    .box { width:min(440px, calc(100% - 2rem)); margin:0 auto; padding:6.5rem 0 4rem; text-align:center; }
+    h1 { font-weight:400; font-size:clamp(2rem, 6vw, 2.6rem); margin:0 0 .7rem; }
+    p { font:500 1.05rem/1.5 Arial,sans-serif; color:#cfc6b6; margin:0 0 1.7rem; }
     a {
-      display:inline-block; color:#f3efe6; text-decoration:none;
-      font:700 .85rem Arial,sans-serif; letter-spacing:.06em; text-transform:uppercase;
-      border:1px solid rgba(255,255,255,.22); padding:.6rem 1.1rem; border-radius:999px;
+      display:inline-block; color:#fff; text-decoration:none;
+      font:700 .8rem/1 Arial,sans-serif; letter-spacing:.06em; text-transform:uppercase;
+      background:#e67a28; box-shadow:0 3px 0 #b85a18;
+      padding:.7rem 1.2rem; border-radius:999px;
     }
+    a:hover { filter:brightness(1.06); }
   </style>
 </head>
 <body>
   <div class="bar"></div>
   <div class="box">
-    <h1>You’re done</h1>
-    <p id="note">Saving the paid attendee list.</p>
+    <h1>You&rsquo;re done</h1>
+    <p>Payment received.</p>
     <a href="https://sunburyseminars.com/">Back to website</a>
   </div>
   <script>
     (function () {
       var SAVE = 'https://sunbury-seminars-pay-preview.vercel.app/api/save-roster';
-      var note = document.getElementById('note');
       var raw = '';
       try { raw = sessionStorage.getItem('ssiRoster') || ''; } catch (e) {}
-      if (!raw) {
-        note.textContent = 'Payment received.';
-        return;
-      }
+      if (!raw) return;
       var payload;
-      try { payload = JSON.parse(raw); } catch (e) {
-        note.textContent = 'Payment received.';
-        return;
-      }
+      try { payload = JSON.parse(raw); } catch (e) { return; }
       payload.paid = true;
       payload.paidAt = payload.paidAt || new Date().toISOString();
       fetch(SAVE, {
@@ -46,12 +42,8 @@
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(payload)
       }).then(function (r) {
-        if (!r.ok) throw new Error('save failed');
-        try { sessionStorage.removeItem('ssiRoster'); } catch (e) {}
-        note.textContent = 'Payment received. Attendees are on the paid roster.';
-      }).catch(function () {
-        note.textContent = 'Payment received. If names are missing from the roster, email the office the names you paid for.';
-      });
+        if (r.ok) { try { sessionStorage.removeItem('ssiRoster'); } catch (e) {} }
+      }).catch(function () {});
     })();
   </script>
 </body>
