@@ -49,18 +49,11 @@
     .go { width:100%; background:#e67a28; color:#fff; margin-top:.55rem; padding:.95rem; box-shadow:0 3px 0 #b85a18; }
     .go:hover:not(:disabled) { filter:brightness(1.06); }
     .go:disabled { background:rgba(255,255,255,.08); color:#cfc6b6; cursor:not-allowed; box-shadow:none; }
-    .save { width:100%; background:#e67a28; color:#fff; margin-top:.65rem; padding:.95rem; box-shadow:0 3px 0 #b85a18; }
-    .save:hover { filter:brightness(1.06); }
     .total { font-size:1.45rem; }
     .err { color:#ffb4a8; display:none; margin-top:.5rem; font:15px Arial,sans-serif; }
     .hint { color:#cfc6b6; font:14.5px/1.45 Arial,sans-serif; margin:.3rem 0 .2rem; }
     #summary { display:none; }
     #summary.on { display:block; }
-    #locked { display:none; }
-    #entry.out { opacity:0; transform:translateY(-8px); transition:.45s ease; pointer-events:none; max-height:0; overflow:hidden; margin:0; padding:0; }
-    #locked.in { display:block; animation:pop .45s ease; }
-    @keyframes pop { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
-    #paycard.ready { box-shadow:0 0 0 3px rgba(230,122,40,.45); }
     @media (max-width:700px) { .two, .grid, .grid3 { grid-template-columns:1fr; } .times li { grid-template-columns:1fr; } }
   </style>
 </head>
@@ -123,22 +116,20 @@
             <p class="err" id="err"></p>
           </div>
         </div>
-        <div class="card" id="locked"></div>
         <div class="card" id="paycard">
           <div class="hint" id="summary"></div>
           <div class="total" id="total">Total $0.00</div>
-          <button class="save" type="button" id="savebtn">Submit attendee list</button>
-          <button class="go" type="button" id="paybtn" disabled>Pay on Clover after the list is submitted</button>
+          <button class="go" type="button" id="paybtn" disabled>Pay on Clover</button>
+          <p class="hint">Names go on the paid roster only after Clover payment goes through.</p>
         </div>
       </form>
     </section>
   </div>
   <script>
-    const SAVE = 'https://sunbury-seminars-pay-preview.vercel.app/api/save-roster';
     const PAY = 'https://sunbury-seminars-pay-preview.vercel.app/api/create-checkout';
     const STATES = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'];
     const peopleEl = document.getElementById('people');
-    let n = 0, submitted = null, locked = false;
+    let n = 0;
     function stateOptions() {
       return '<option value="">ST</option>' + STATES.map(s => `<option value="${s}">${s}</option>`).join('');
     }
@@ -172,7 +163,6 @@
       } catch (e) {}
     }
     function addPerson(role) {
-      if (locked) return;
       n += 1;
       const wrap = document.createElement('div');
       wrap.className = 'person';
@@ -194,7 +184,7 @@
           <div><label>State <i>*</i></label><select name="state-${n}" required>${stateOptions()}</select></div>
           <div><label>ZIP <i>*</i></label><input name="zip-${n}" inputmode="numeric" maxlength="10" required></div>
         </div>`;
-      wrap.querySelector('.remove').onclick = () => { if (!locked) { wrap.remove(); tally(); } };
+      wrap.querySelector('.remove').onclick = () => { wrap.remove(); tally(); };
       wrap.querySelector('[name^="phone"]').addEventListener('input', (e) => {
         e.target.value = formatPhone(e.target.value);
       });
@@ -235,6 +225,14 @@
       }
       document.getElementById('total').textContent = 'Total $' + totalOf(list).toFixed(2);
       document.getElementById('err').style.display = 'none';
+      const pay = document.getElementById('paybtn');
+      if (list.length) {
+        pay.disabled = false;
+        pay.textContent = 'Pay $' + totalOf(list).toFixed(2) + ' on Clover';
+      } else {
+        pay.disabled = true;
+        pay.textContent = 'Pay on Clover';
+      }
     }
     function buyerOf(list) {
       const p = list[0] || {};
@@ -253,33 +251,11 @@
     }
     document.getElementById('addDentist').onclick = () => addPerson('dentist');
     document.getElementById('addStaff').onclick = () => addPerson('staff');
-    document.getElementById('savebtn').onclick = async () => {
-      if (locked || !valid()) return;
-      const people = roster();
-      submitted = { buyer: buyerOf(people), people };
-      locked = true;
-      const box = document.getElementById('locked');
-      box.innerHTML = '<strong>List submitted</strong><ul style="margin:.4rem 0 0;padding-left:1.1rem;">' +
-        people.map(p => `<li>${p.first} ${p.last} — ${p.role === 'staff' ? 'Staff $300' : 'Dentist $525'}</li>`).join('') +
-        '</ul>';
-      document.getElementById('entry').classList.add('out');
-      setTimeout(() => {
-        document.getElementById('entry').style.display = 'none';
-        box.classList.add('in');
-        const pay = document.getElementById('paybtn');
-        pay.disabled = false;
-        pay.textContent = 'Pay $' + totalOf(people).toFixed(2) + ' on Clover';
-        document.getElementById('savebtn').style.display = 'none';
-        document.getElementById('paycard').classList.add('ready');
-        pay.focus();
-        pay.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 420);
-      try {
-        await fetch(SAVE, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(submitted) });
-      } catch (e) {}
-    };
     document.getElementById('paybtn').onclick = async () => {
-      if (!submitted) return showErr('Submit the attendee list first.');
+      if (!valid()) return;
+      const people = roster();
+      const submitted = { buyer: buyerOf(people), people, paid: true, paidAt: new Date().toISOString() };
+      try { sessionStorage.setItem('ssiRoster', JSON.stringify(submitted)); } catch (e) {}
       const btn = document.getElementById('paybtn');
       btn.disabled = true; btn.textContent = 'Opening Clover\u2026';
       try {
@@ -290,7 +266,7 @@
       } catch (ex) {
         showErr(ex.message);
         btn.disabled = false;
-        btn.textContent = 'Pay $' + totalOf(submitted.people).toFixed(2) + ' on Clover';
+        btn.textContent = 'Pay $' + totalOf(people).toFixed(2) + ' on Clover';
       }
     };
     (function () {
