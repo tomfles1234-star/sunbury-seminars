@@ -37,6 +37,11 @@
       try { payload = JSON.parse(raw); } catch (e) { return; }
       payload.paid = true;
       payload.paidAt = payload.paidAt || new Date().toISOString();
+      try {
+        var q = new URLSearchParams(window.location.search);
+        var sid = q.get('session_id') || q.get('checkoutSessionId') || q.get('checkout_session_id');
+        if (sid) payload.checkoutSessionId = sid;
+      } catch (e) {}
       fetch(SAVE, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },

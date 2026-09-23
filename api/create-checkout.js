@@ -50,7 +50,7 @@ export default async function handler(req, res) {
     },
     shoppingCart: { lineItems },
     redirectUrls: {
-      success: 'https://sunburyseminars.com/thank-you.html',
+      success: 'https://sunburyseminars.com/thank-you.html?session_id={CHECKOUT_SESSION_ID}',
       failure: 'https://sunburyseminars.com/#register'
     }
   };
