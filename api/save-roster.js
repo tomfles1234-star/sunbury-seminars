@@ -97,7 +97,10 @@ async function handler(req, res) {
   try {
     const paymentMethod = await resolvePaymentMethod(body);
     body.paymentMethod = paymentMethod;
-    const rows = buildRosterRows(body);
+    const rows = buildRosterRows(body).map((row) => {
+      row.PaymentMethod = paymentMethod;
+      return row;
+    });
     const payload = rosterPayload(body, rows);
     payload.paymentMethod = paymentMethod;
     const written = await writeRosterInbox(payload);
