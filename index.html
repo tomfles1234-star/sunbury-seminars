@@ -11,18 +11,24 @@
     .bar { height:4px; background:#e67a28; }
     .wrap { width:min(780px, calc(100% - 1.5rem)); margin:0 auto; padding:2rem 0 4rem; }
     header { text-align:center; margin-bottom:1.6rem; }
-    .title-row { display:flex; align-items:center; justify-content:center; gap:.7rem; }
+    .title-row { display:flex; align-items:center; justify-content:center; gap:.85rem; padding-top:.35rem; }
     h1 { font-size:clamp(1.7rem, 5.4vw, 3.2rem); font-weight:400; }
     .sub { font:500 .92rem/1.4 Arial,sans-serif; color:#cfc6b6; margin-top:.45rem; }
-    .phone { display:block; margin-top:.4rem; font:650 .98rem/1.3 Arial,sans-serif; color:#e0c48a; text-decoration:none; letter-spacing:.03em; }
+    .phone, .fax { display:block; margin-top:.35rem; font:650 .98rem/1.3 Arial,sans-serif; color:#e0c48a; letter-spacing:.02em; }
+    .phone { text-decoration:none; }
     .phone:hover { color:#f3efe6; }
-    .fax { display:block; margin-top:.2rem; font:650 .92rem/1.3 Arial,sans-serif; color:#e0c48a; letter-spacing:.03em; }
+    .fax { margin-top:.2rem; }
     .nav { display:flex; justify-content:center; gap:.5rem; margin-top:1rem; }
     .nav a { font:700 .8rem/1 Arial,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#fff; text-decoration:none; border:0; padding:.6rem 1rem; border-radius:999px; background:#e67a28; box-shadow:0 3px 0 #b85a18; }
     .nav a:hover { filter:brightness(1.06); }
     .nav a.hi { background:#e67a28; }
-    .paysticker { flex:none; width:7.1rem; padding:.5rem .48rem .55rem; background:#f6e27a; color:#3d3318; transform:rotate(-8deg); border-radius:3px 11px 4px 8px; box-shadow:2px 3px 0 rgba(0,0,0,.25); font:700 .6rem/1.25 Arial,sans-serif; letter-spacing:.03em; text-transform:uppercase; text-align:center; pointer-events:none; user-select:none; cursor:default; }
+    .paysticker { position:relative; flex:none; width:8.3rem; padding:.95rem .55rem .7rem; background:linear-gradient(180deg,#f9ec9a 0%,#f3d45d 78%,#ecd04f 100%); color:#3d3318; transform:rotate(-7deg); border-radius:2px; box-shadow:0 1px 0 rgba(255,255,255,.55) inset, 1px 2px 3px rgba(0,0,0,.18), 4px 10px 16px rgba(0,0,0,.28); font:700 .6rem/1.28 Arial,sans-serif; letter-spacing:.03em; text-transform:uppercase; text-align:center; pointer-events:none; user-select:none; cursor:default; }
+    .paysticker:after { content:""; position:absolute; right:0; bottom:0; border-width:0 0 14px 14px; border-style:solid; border-color:transparent transparent #c9b24a #e2c85a; filter:drop-shadow(-1px -1px 1px rgba(0,0,0,.12)); }
     .paysticker b { display:block; color:#7a1f1f; font:800 .58rem/1 Arial,sans-serif; margin-bottom:.22rem; }
+    .tape { position:absolute; top:-11px; left:50%; width:46px; height:20px; margin-left:-23px; background:linear-gradient(180deg,rgba(255,255,245,.62),rgba(228,218,170,.34)); border-radius:1px; box-shadow:0 1px 2px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.45); transform:rotate(6deg); }
+    .tape:before, .tape:after { content:""; position:absolute; top:0; bottom:0; width:8px; background:linear-gradient(90deg,rgba(0,0,0,.08),transparent 70%); }
+    .tape:before { left:0; }
+    .tape:after { right:0; transform:scaleX(-1); }
     .block { margin:0 0 1.25rem; padding:1.35rem 1.3rem 1.4rem; background:rgba(255,255,255,.06); border-radius:18px; }
     h2 { font-size:clamp(1.25rem, 3.2vw, 1.55rem); font-weight:400; margin:0 0 .75rem; }
     h3 { font:700 .72rem/1 Arial,sans-serif; letter-spacing:.12em; text-transform:uppercase; color:#e0c48a; margin:1.1rem 0 .4rem; }
@@ -60,7 +66,7 @@
     .hint { color:#cfc6b6; font:14.5px/1.45 Arial,sans-serif; margin:.3rem 0 .2rem; }
     #summary { display:none; }
     #summary.on { display:block; }
-    @media (max-width:700px) { .two, .grid, .grid3 { grid-template-columns:1fr; } .times li { grid-template-columns:1fr; } .title-row { flex-direction:column; gap:.55rem; } .paysticker { width:8.2rem; } }
+    @media (max-width:700px) { .two, .grid, .grid3 { grid-template-columns:1fr; } .times li { grid-template-columns:1fr; } .title-row { flex-direction:column; gap:.7rem; } .paysticker { width:8.6rem; } }
   </style>
 </head>
 <body>
@@ -69,13 +75,14 @@
     <header>
       <div class="title-row">
         <div class="paysticker">
+          <span class="tape"></span>
           <b>Now accepting</b>
           Cards &middot; Apple Pay &middot; Google Pay
         </div>
         <h1>Sunbury Seminars, Inc.</h1>
       </div>
-      <a class="phone" href="tel:800-222-8207,1">800-222-8207 Ext 1</a>
-      <span class="fax">Fax 740.965.9560</span>
+      <a class="phone" href="tel:8002228207,1">(800) 222-8207, Ext. 1</a>
+      <span class="fax">Fax (740) 965-9560</span>
       <p class="sub">Dental continuing education &middot; Ohio &middot; Anesthesia and pharmacology</p>
       <nav class="nav"><a href="#course">Course</a><a class="hi" href="#register">Register</a></nav>
     </header>
