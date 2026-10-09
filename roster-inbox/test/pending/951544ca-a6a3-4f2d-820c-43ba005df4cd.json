@@ -1,0 +1,24 @@
+{
+  "status": "pending",
+  "checkoutSessionId": "951544ca-a6a3-4f2d-820c-43ba005df4cd",
+  "createdAt": "2026-10-09T01:24:13.843Z",
+  "cart": {
+    "names": [
+      "Staff — TEST FRESH-DELETE-ME"
+    ],
+    "cents": 30000
+  },
+  "buyer": {
+    "first": "TEST",
+    "last": "DELETE-ME",
+    "email": "test-delete-me@example.com"
+  },
+  "people": [
+    {
+      "role": "staff",
+      "first": "TEST",
+      "last": "FRESH-DELETE-ME",
+      "email": "test-delete-me@example.com"
+    }
+  ]
+}
