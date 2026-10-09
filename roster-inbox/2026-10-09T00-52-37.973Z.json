@@ -1,0 +1,46 @@
+{
+  "buyer": {
+    "first": "TEST",
+    "last": "DELETE-ME",
+    "email": "tomfles1234+ssitest@gmail.com",
+    "phone": "000-000-0000",
+    "attending": true
+  },
+  "people": [
+    {
+      "first": "TEST",
+      "last": "DELETE-ME",
+      "email": "tomfles1234+ssitest@gmail.com",
+      "phone": "000-000-0000",
+      "street": "1 Test St",
+      "city": "Test",
+      "state": "NJ",
+      "zip": "00000",
+      "role": "staff"
+    }
+  ],
+  "rows": [
+    {
+      "Submitted": "2026-10-09T00:52:37.973Z",
+      "CourseDate": "2026-10-24",
+      "PayerFirst": "TEST",
+      "PayerLast": "DELETE-ME",
+      "PayerEmail": "tomfles1234+ssitest@gmail.com",
+      "PayerPhone": "000-000-0000",
+      "PayerAttending": "Yes",
+      "FirstName": "TEST",
+      "LastName": "DELETE-ME",
+      "Email": "tomfles1234+ssitest@gmail.com",
+      "Phone": "000-000-0000",
+      "Street": "1 Test St",
+      "City": "Test",
+      "State": "NJ",
+      "ZIP": "00000",
+      "Title": "Staff",
+      "Fee": 300,
+      "PaymentMethod": "TEST"
+    }
+  ],
+  "total": 300,
+  "paymentMethod": "TEST"
+}
