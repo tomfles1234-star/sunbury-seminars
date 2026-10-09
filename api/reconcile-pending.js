@@ -118,8 +118,11 @@ async function handler(req, res) {
       return res.status(200).json(report);
     }
 
-    const dirs = [P.INBOX, `${P.INBOX}/done`];
-    if (test) dirs.unshift(base, `${base}/done`);
+    // Test-only: ignoreLogged compares against test files only, so the
+    // recovery path can be exercised end to end against real Clover data.
+    const ignoreLogged = test && body.ignoreLogged === true;
+    const dirs = ignoreLogged ? [base, `${base}/done`] : [P.INBOX, `${P.INBOX}/done`];
+    if (test && !ignoreLogged) dirs.unshift(base, `${base}/done`);
     const neighbors = await confirmedNeighbors(dirs, minMs - P.NEIGHBOR_WINDOW_MS, maxMs + P.NEIGHBOR_WINDOW_MS);
     const claimed = new Set(neighbors.map((n) => n.cloverPaymentId).filter(Boolean));
 
