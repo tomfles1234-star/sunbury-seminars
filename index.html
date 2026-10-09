@@ -282,10 +282,6 @@
         const r = await fetch(PAY, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(submitted) });
         const data = await r.json();
         if (!r.ok || !data.href) throw new Error(data.error || 'Clover did not return a pay page.');
-        if (data.checkoutSessionId) {
-          submitted.checkoutSessionId = data.checkoutSessionId;
-          try { sessionStorage.setItem('ssiRoster', JSON.stringify(submitted)); } catch (e) {}
-        }
         location.href = data.href;
       } catch (ex) {
         showErr(ex.message);

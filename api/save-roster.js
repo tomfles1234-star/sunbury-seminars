@@ -9,104 +9,78 @@ const {
   createRosterIssue,
   forwardPowerAutomate
 } = require('../lib/ssi-roster');
-const P = require('../lib/ssi-pending');
 
-function withTimeout(promise, ms) {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) => setTimeout(() => reject(new Error(`timed out after ${ms}ms`)), ms))
-  ]);
+function prettyBrand(raw) {
+  const t = String(raw || '').toUpperCase();
+  if (t.includes('AMEX') || t.includes('AMERICAN')) return 'American Express';
+  if (t.includes('VISA')) return 'Visa';
+  if (t.includes('MASTER')) return 'Mastercard';
+  if (t.includes('DISC')) return 'Discover';
+  return raw ? String(raw) : '';
 }
 
-async function findConfirmed(base, sid) {
-  const suffix = `_${sid}.json`;
-  const dirs = [base, `${base}/done`];
-  for (const dir of dirs) {
-    const files = await P.ghList(dir);
-    const hit = files.find((f) => f.name.endsWith(suffix));
-    if (hit) return hit.path;
-  }
-  return null;
+function formatPayMethod(payment) {
+  if (!payment || typeof payment !== 'object') return '';
+  const tender = payment.tender || {};
+  const card = payment.cardTransaction || payment.card_transaction || {};
+  const blob = [
+    tender.label,
+    tender.labelKey,
+    tender.label_key,
+    card.entryType,
+    card.entry_type,
+    payment.source,
+    payment.walletType,
+    payment.wallet_type
+  ].filter(Boolean).join(' ').toLowerCase();
+  if (blob.includes('apple')) return 'Apple Pay';
+  if (blob.includes('google') || blob.includes('android')) return 'Google Pay';
+  const brand = prettyBrand(card.cardType || card.card_type || card.brand);
+  return brand ? `Credit Card (${brand})` : 'Credit Card';
 }
 
-// Best effort: find the Clover payment for this cart to record card brand + id.
-async function lookupPayment(cart, createdAt) {
-  try {
-    const from = Date.parse(createdAt) || (Date.now() - P.PAY_WINDOW_MS);
-    const pays = await withTimeout(P.cloverPayments(from - 60 * 1000, Date.now() + 60 * 1000), 5000);
-    const hits = pays.filter((p) => P.sameCart(cart, p.cart)).sort((a, b) => b.createdTime - a.createdTime);
-    return hits[0] || null;
-  } catch {
-    return null;
+async function cloverGet(url, merchantId, token) {
+  const headers = {
+    accept: 'application/json',
+    'X-Clover-Merchant-Id': merchantId
+  };
+  let r = await fetch(url, { headers: { ...headers, Authorization: `Bearer ${token}` } });
+  let text = await r.text();
+  if (r.status === 401) {
+    r = await fetch(url, { headers: { ...headers, Authorization: token } });
+    text = await r.text();
   }
+  let data = {};
+  try { data = JSON.parse(text); } catch { data = { raw: text }; }
+  return { ok: r.ok, status: r.status, data };
 }
 
-async function fileIssue(out, payload, path, test) {
-  try {
-    const issue = await createRosterIssue(payload, path, new Date(), process.env, fetch, { test });
-    if (issue && issue.assignError) out.assignError = issue.assignError;
-    if (issue && issue.number != null) out.issue = issue.number;
-  } catch (err) {
-    out.issueError = String((err && err.message) || err).slice(0, 400);
+async function resolvePaymentMethod(body) {
+  if (body.paymentMethod || body.PaymentMethod) {
+    return String(body.paymentMethod || body.PaymentMethod);
   }
-}
+  const merchantId = String(process.env.CLOVER_MERCHANT_ID || '').trim();
+  const token = String(process.env.CLOVER_PRIVATE_TOKEN || '').trim();
+  if (!merchantId || !token) return 'Credit Card';
 
-async function forwardHook(payload) {
-  const hook = powerAutomateUrl();
-  if (!hook) return;
-  try { await forwardPowerAutomate(hook, payload); } catch { /* optional */ }
-}
-
-// Thank-you page path with a Clover checkout session id: one deterministic
-// file per session, so repeats are deduped.
-async function saveForSession(req, body, sid) {
-  const base = P.baseFor(req);
-  const test = base === P.TEST_INBOX;
-
-  const already = await findConfirmed(base, sid);
-  if (already) {
-    const stale = await P.ghGet(P.pendingPath(base, sid)).catch(() => null);
-    if (stale) await P.ghDelete(P.pendingPath(base, sid), stale.sha, `Clear pending roster ${sid} (already saved)`).catch(() => {});
-    return { status: 200, out: { ok: true, saved: 0, duplicate: true, checkoutSessionId: sid } };
+  const sessionId = body.checkoutSessionId || body.session_id || '';
+  if (sessionId) {
+    const urls = [
+      `https://api.clover.com/invoicingcheckoutservice/v1/checkouts/${encodeURIComponent(sessionId)}`,
+      `https://api.clover.com/invoicingcheckoutservice/v1/checkouts/${encodeURIComponent(sessionId)}?expand=payments`
+    ];
+    for (const url of urls) {
+      try {
+        const { ok, data } = await cloverGet(url, merchantId, token);
+        if (!ok) continue;
+        const list = (data.payments && (data.payments.elements || data.payments)) || [];
+        const payment = data.payment || list[0] || data;
+        const method = formatPayMethod(payment);
+        if (method) return method;
+      } catch (e) {}
+    }
   }
-
-  const pending = await P.ghGet(P.pendingPath(base, sid)).catch(() => null);
-  const parked = pending && pending.json && Array.isArray(pending.json.people) && pending.json.people.length ? pending.json : null;
-  const roster = parked || body;
-  const people = Array.isArray(roster.people) ? roster.people : [];
-  if (!people.length) return { status: 400, out: { error: 'Add at least one attendee.' } };
-
-  const createdAt = (parked && parked.createdAt) || new Date().toISOString();
-  const cart = P.cartOf(people);
-  let paymentMethod = body.paymentMethod || body.PaymentMethod || '';
-  let cloverPaymentId;
-  if (!paymentMethod) {
-    const pay = await lookupPayment(cart, createdAt);
-    if (pay) { paymentMethod = pay.method; cloverPaymentId = pay.id; }
-  }
-
-  const payload = P.confirmedPayload(roster, {
-    sid,
-    createdAt,
-    submittedAt: new Date().toISOString(),
-    paymentMethod: paymentMethod || 'Credit Card',
-    source: 'thank-you',
-    cloverPaymentId
-  });
-  const path = P.confirmedPath(base, createdAt, sid);
-  const result = await P.ghCreate(path, payload, `Add roster submission (${payload.rows.length} attendee${payload.rows.length === 1 ? '' : 's'})`);
-  if (pending) {
-    await P.ghDelete(P.pendingPath(base, sid), pending.sha, `Promote pending roster ${sid}`).catch(() => {});
-  }
-  if (result === 'exists') {
-    return { status: 200, out: { ok: true, saved: 0, duplicate: true, checkoutSessionId: sid } };
-  }
-
-  const out = { ok: true, saved: payload.rows.length, paymentMethod: payload.paymentMethod, checkoutSessionId: sid, path };
-  if (test) out.test = true;
-  await fileIssue(out, payload, path, test);
-  if (!test) await forwardHook(payload);
-  return { status: 200, out };
+  return 'Credit Card';
 }
 
 async function handler(req, res) {
@@ -117,25 +91,11 @@ async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
 
   const body = parseJsonBody(req.body);
-  const sid = P.cleanSessionId(body.checkoutSessionId || body.session_id);
+  const people = Array.isArray(body.people) ? body.people : [];
+  if (!people.length) return res.status(400).json({ error: 'Add at least one attendee.' });
 
   try {
-    if (sid) {
-      const { status, out } = await saveForSession(req, body, sid);
-      return res.status(status).json(out);
-    }
-
-    // Legacy path (no session id): timestamped inbox file, as before.
-    if (P.baseFor(req) === P.TEST_INBOX) {
-      return res.status(400).json({ error: 'Test saves need a checkoutSessionId.' });
-    }
-    const people = Array.isArray(body.people) ? body.people : [];
-    if (!people.length) return res.status(400).json({ error: 'Add at least one attendee.' });
-    let paymentMethod = String(body.paymentMethod || body.PaymentMethod || '');
-    if (!paymentMethod) {
-      const pay = await lookupPayment(P.cartOf(people), new Date(Date.now() - P.PAY_WINDOW_MS).toISOString());
-      paymentMethod = (pay && pay.method) || 'Credit Card';
-    }
+    const paymentMethod = await resolvePaymentMethod(body);
     body.paymentMethod = paymentMethod;
     const rows = buildRosterRows(body).map((row) => {
       row.PaymentMethod = paymentMethod;
@@ -143,16 +103,30 @@ async function handler(req, res) {
     });
     const payload = rosterPayload(body, rows);
     payload.paymentMethod = paymentMethod;
-    payload.source = 'thank-you (no session id)';
     const written = await writeRosterInbox(payload);
     const out = { ok: true, saved: written.saved, paymentMethod };
-    await fileIssue(out, payload, written.path, false);
-    await forwardHook(payload);
+
+    try {
+      const issue = await createRosterIssue(payload, written.path);
+      if (issue && issue.assignError) out.assignError = issue.assignError;
+    } catch (err) {
+      out.issueError = String((err && err.message) || err).slice(0, 400);
+    }
+
+    const hook = powerAutomateUrl();
+    if (hook) {
+      try {
+        await forwardPowerAutomate(hook, payload);
+      } catch {
+        // GitHub inbox is the source of truth; the flow is optional.
+      }
+    }
+
     return res.status(200).json(out);
   } catch (err) {
-    console.error('save-roster failed', err && err.message);
     return res.status(err.status || 502).json({
-      error: err.message || 'Could not save the attendee list.'
+      error: err.message || 'Could not save the attendee list.',
+      detail: err.detail
     });
   }
 }
