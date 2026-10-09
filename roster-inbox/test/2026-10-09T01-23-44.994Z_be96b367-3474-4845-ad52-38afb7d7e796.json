@@ -1,0 +1,49 @@
+{
+  "buyer": {
+    "first": "TEST",
+    "last": "DELETE-ME",
+    "email": "test-delete-me@example.com",
+    "phone": "7325550100",
+    "attending": true
+  },
+  "people": [
+    {
+      "role": "staff",
+      "first": "TEST",
+      "last": "DELETE-ME",
+      "email": "test-delete-me@example.com",
+      "phone": "732-555-0100",
+      "street": "1 Test St",
+      "city": "Testville",
+      "state": "NJ",
+      "zip": "07720"
+    }
+  ],
+  "rows": [
+    {
+      "Submitted": "2026-10-09T01:23:53.766Z",
+      "CourseDate": "2026-10-24",
+      "PayerFirst": "TEST",
+      "PayerLast": "DELETE-ME",
+      "PayerEmail": "test-delete-me@example.com",
+      "PayerPhone": "7325550100",
+      "PayerAttending": "Yes",
+      "FirstName": "TEST",
+      "LastName": "DELETE-ME",
+      "Email": "test-delete-me@example.com",
+      "Phone": "732-555-0100",
+      "Street": "1 Test St",
+      "City": "Testville",
+      "State": "NJ",
+      "ZIP": "07720",
+      "Title": "Staff",
+      "Fee": 300,
+      "PaymentMethod": "Credit Card"
+    }
+  ],
+  "total": 300,
+  "paymentMethod": "Credit Card",
+  "checkoutSessionId": "be96b367-3474-4845-ad52-38afb7d7e796",
+  "checkoutCreatedAt": "2026-10-09T01:23:44.994Z",
+  "source": "thank-you"
+}
