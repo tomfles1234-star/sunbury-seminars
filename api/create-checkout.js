@@ -1,4 +1,48 @@
-export default async function handler(req, res) {
+'use strict';
+
+const {
+  baseFor,
+  cleanSessionId,
+  pendingPath,
+  ghCreate,
+  lineName,
+  cartOf,
+  TEST_INBOX
+} = require('../lib/ssi-pending');
+
+function parseBody(raw) {
+  if (raw == null) return {};
+  if (typeof raw === 'string') {
+    try { return JSON.parse(raw); } catch { return {}; }
+  }
+  return typeof raw === 'object' ? raw : {};
+}
+
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(`timed out after ${ms}ms`)), ms))
+  ]);
+}
+
+async function callClover(merchantId, authValue, payload) {
+  const r = await fetch('https://api.clover.com/invoicingcheckoutservice/v1/checkouts', {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+      'X-Clover-Merchant-Id': merchantId,
+      Authorization: authValue
+    },
+    body: JSON.stringify(payload)
+  });
+  const text = await r.text();
+  let data = {};
+  try { data = JSON.parse(text); } catch { data = { raw: text.slice(0, 300) }; }
+  return { r, data };
+}
+
+async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -11,25 +55,17 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Clover keys are not set on Vercel yet.' });
   }
 
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch { body = {}; }
-  }
+  const body = parseBody(req.body);
   const people = Array.isArray(body.people) ? body.people : [];
   const buyer = body.buyer || {};
   if (!people.length) return res.status(400).json({ error: 'Add at least one attendee.' });
 
-  const lineItems = people.map((p) => {
-    const role = p.role === 'staff' ? 'staff' : 'dentist';
-    const price = role === 'staff' ? 30000 : 52500;
-    const name = [p.first, p.last].filter(Boolean).join(' ') || role;
-    return {
-      name: role === 'staff' ? `Staff — ${name}` : `Dentist — ${name}`,
-      price,
-      unitQty: 1,
-      note: p.email || ''
-    };
-  });
+  const lineItems = people.map((p) => ({
+    name: lineName(p),
+    price: p.role === 'staff' ? 30000 : 52500,
+    unitQty: 1,
+    note: p.email || ''
+  }));
 
   const person = people[0] || {};
   const address1 = buyer.address1 || buyer.street || person.address1 || person.street || '';
@@ -55,33 +91,58 @@ export default async function handler(req, res) {
     }
   };
 
-  async function callClover(authValue) {
-    const r = await fetch('https://api.clover.com/invoicingcheckoutservice/v1/checkouts', {
-      method: 'POST',
-      headers: {
-        accept: 'application/json',
-        'content-type': 'application/json',
-        'X-Clover-Merchant-Id': merchantId,
-        Authorization: authValue
-      },
-      body: JSON.stringify(payload)
-    });
-    const text = await r.text();
-    let data = {};
-    try { data = JSON.parse(text); } catch { data = { raw: text }; }
-    return { r, data };
-  }
-
-  let { r, data } = await callClover(`Bearer ${token}`);
-  if ((!r.ok || !data.href) && r.status === 401) {
-    ({ r, data } = await callClover(token));
+  let r;
+  let data;
+  try {
+    ({ r, data } = await callClover(merchantId, `Bearer ${token}`, payload));
+    if ((!r.ok || !data.href) && r.status === 401) {
+      ({ r, data } = await callClover(merchantId, token, payload));
+    }
+  } catch (err) {
+    console.error('create-checkout: Clover request failed', err && err.message);
+    return res.status(502).json({ error: 'Could not reach Clover. Please try again in a minute.' });
   }
   if (!r.ok || !data.href) {
-    return res.status(r.status || 502).json({
+    return res.status(r.status && r.status >= 400 ? r.status : 502).json({
       error: data.message || data.error || `Clover ${r.status}`,
-      cloverStatus: r.status,
-      detail: data
+      cloverStatus: r.status
     });
   }
-  return res.status(200).json({ href: data.href, checkoutSessionId: data.checkoutSessionId });
+
+  const sid = cleanSessionId(data.checkoutSessionId);
+  const out = { href: data.href, checkoutSessionId: data.checkoutSessionId };
+
+  // Park the roster server-side so a paid buyer who closes the tab before
+  // thank-you.html loads is still logged by /api/reconcile-pending.
+  // Never block the payment on this.
+  if (sid) {
+    const base = baseFor(req);
+    const createdAt = data.createdTime ? new Date(Number(data.createdTime)).toISOString() : new Date().toISOString();
+    const pending = {
+      status: 'pending',
+      checkoutSessionId: sid,
+      createdAt,
+      expiresAt: data.expirationTime ? new Date(Number(data.expirationTime)).toISOString() : undefined,
+      cart: cartOf(people),
+      buyer,
+      people
+    };
+    try {
+      await withTimeout(
+        ghCreate(pendingPath(base, sid), pending, `Pending roster ${sid} (${people.length} attendee${people.length === 1 ? '' : 's'})`),
+        6000
+      );
+      out.pendingSaved = true;
+    } catch (err) {
+      console.error('create-checkout: pending roster write failed', sid, err && err.message);
+      out.pendingSaved = false;
+    }
+    if (base === TEST_INBOX) out.test = true;
+  } else {
+    console.error('create-checkout: Clover returned no usable checkoutSessionId');
+  }
+
+  return res.status(200).json(out);
 }
+
+module.exports = handler;
