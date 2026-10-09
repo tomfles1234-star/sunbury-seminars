@@ -1,0 +1,23 @@
+{
+  "status": "pending",
+  "checkoutSessionId": "local-test-0001-aaaa",
+  "createdAt": "2026-10-09T01:22:34.048Z",
+  "expiresAt": "2026-10-09T01:37:34.048Z",
+  "cart": {
+    "names": [
+      "Staff — TEST DELETE-ME"
+    ],
+    "cents": 30000
+  },
+  "buyer": {
+    "first": "TEST",
+    "last": "DELETE-ME"
+  },
+  "people": [
+    {
+      "role": "staff",
+      "first": "TEST",
+      "last": "DELETE-ME"
+    }
+  ]
+}
