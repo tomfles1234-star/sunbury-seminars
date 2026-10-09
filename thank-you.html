@@ -40,7 +40,7 @@
       try {
         var q = new URLSearchParams(window.location.search);
         var sid = q.get('session_id') || q.get('checkoutSessionId') || q.get('checkout_session_id');
-        if (sid) payload.checkoutSessionId = sid;
+        if (sid && /^[A-Za-z0-9-]{8,80}$/.test(sid)) payload.checkoutSessionId = sid;
       } catch (e) {}
       fetch(SAVE, {
         method: 'POST',
