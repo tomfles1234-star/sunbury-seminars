@@ -12,10 +12,11 @@ const {
 const P = require('../lib/ssi-pending');
 
 function withTimeout(promise, ms) {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) => setTimeout(() => reject(new Error(`timed out after ${ms}ms`)), ms))
-  ]);
+  let timer;
+  const limit = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`timed out after ${ms}ms`)), ms);
+  });
+  return Promise.race([promise, limit]).finally(() => clearTimeout(timer));
 }
 
 async function findConfirmed(base, sid) {
@@ -157,4 +158,17 @@ async function handler(req, res) {
   }
 }
 
-module.exports = handler;
+// Last-resort guard: always answer with clean JSON instead of a platform 500.
+module.exports = async function guarded(req, res) {
+  try {
+    return await handler(req, res);
+  } catch (err) {
+    console.error('save-roster crashed', err && err.stack);
+    if (res.headersSent) return undefined;
+    let detail;
+    try {
+      if (require('../lib/ssi-pending').baseFor(req) !== 'roster-inbox') detail = String(err && err.message).slice(0, 200);
+    } catch { /* ignore */ }
+    return res.status(500).json({ error: 'Server error. Please try again.', detail });
+  }
+};

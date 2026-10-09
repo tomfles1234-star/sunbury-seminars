@@ -19,10 +19,11 @@ function parseBody(raw) {
 }
 
 function withTimeout(promise, ms) {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) => setTimeout(() => reject(new Error(`timed out after ${ms}ms`)), ms))
-  ]);
+  let timer;
+  const limit = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`timed out after ${ms}ms`)), ms);
+  });
+  return Promise.race([promise, limit]).finally(() => clearTimeout(timer));
 }
 
 async function callClover(merchantId, authValue, payload) {
@@ -109,40 +110,55 @@ async function handler(req, res) {
     });
   }
 
-  const sid = cleanSessionId(data.checkoutSessionId);
   const out = { href: data.href, checkoutSessionId: data.checkoutSessionId };
 
   // Park the roster server-side so a paid buyer who closes the tab before
   // thank-you.html loads is still logged by /api/reconcile-pending.
-  // Never block the payment on this.
-  if (sid) {
+  // Nothing in here may ever block or break the payment link.
+  let test = false;
+  try {
+    const sid = cleanSessionId(data.checkoutSessionId);
     const base = baseFor(req);
-    const createdAt = data.createdTime ? new Date(Number(data.createdTime)).toISOString() : new Date().toISOString();
-    const pending = {
-      status: 'pending',
-      checkoutSessionId: sid,
-      createdAt,
-      expiresAt: data.expirationTime ? new Date(Number(data.expirationTime)).toISOString() : undefined,
-      cart: cartOf(people),
-      buyer,
-      people
-    };
-    try {
+    test = base === TEST_INBOX;
+    if (test) out.test = true;
+    if (!sid) {
+      console.error('create-checkout: Clover returned no usable checkoutSessionId');
+      out.pendingSaved = false;
+    } else {
+      const pending = {
+        status: 'pending',
+        checkoutSessionId: sid,
+        createdAt: new Date().toISOString(),
+        cart: cartOf(people),
+        buyer,
+        people
+      };
       await withTimeout(
         ghCreate(pendingPath(base, sid), pending, `Pending roster ${sid} (${people.length} attendee${people.length === 1 ? '' : 's'})`),
         6000
       );
       out.pendingSaved = true;
-    } catch (err) {
-      console.error('create-checkout: pending roster write failed', sid, err && err.message);
-      out.pendingSaved = false;
     }
-    if (base === TEST_INBOX) out.test = true;
-  } else {
-    console.error('create-checkout: Clover returned no usable checkoutSessionId');
+  } catch (err) {
+    console.error('create-checkout: pending roster write failed', err && err.message);
+    out.pendingSaved = false;
+    if (test) out.pendingError = String((err && err.message) || err).slice(0, 200);
   }
 
   return res.status(200).json(out);
 }
 
-module.exports = handler;
+// Last-resort guard: always answer with clean JSON instead of a platform 500.
+module.exports = async function guarded(req, res) {
+  try {
+    return await handler(req, res);
+  } catch (err) {
+    console.error('create-checkout crashed', err && err.stack);
+    if (res.headersSent) return undefined;
+    let detail;
+    try {
+      if (require('../lib/ssi-pending').baseFor(req) !== 'roster-inbox') detail = String(err && err.message).slice(0, 200);
+    } catch { /* ignore */ }
+    return res.status(500).json({ error: 'Server error. Please try again.', detail });
+  }
+};
