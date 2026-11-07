@@ -22,14 +22,6 @@
     .nav { display:flex; justify-content:center; gap:.5rem; margin-top:1rem; }
     .nav a { font:700 .8rem/1 Arial,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#fff; text-decoration:none; border:0; padding:.6rem 1rem; border-radius:999px; background:#e67a28; box-shadow:0 3px 0 #b85a18; }
     .nav a:hover { filter:brightness(1.06); }
-    .nav a.hi { background:#e67a28; }
-    .paysticker { position:relative; flex:none; width:8.3rem; padding:.95rem .55rem .7rem; background:linear-gradient(180deg,#f9ec9a 0%,#f3d45d 78%,#ecd04f 100%); color:#3d3318; transform:rotate(-7deg); border-radius:2px; box-shadow:0 1px 0 rgba(255,255,255,.55) inset, 1px 2px 3px rgba(0,0,0,.18), 4px 10px 16px rgba(0,0,0,.28); font:700 .6rem/1.28 Arial,sans-serif; letter-spacing:.03em; text-transform:uppercase; text-align:center; pointer-events:none; user-select:none; cursor:default; }
-    .paysticker:after { content:""; position:absolute; right:0; bottom:0; border-width:0 0 14px 14px; border-style:solid; border-color:transparent transparent #c9b24a #e2c85a; filter:drop-shadow(-1px -1px 1px rgba(0,0,0,.12)); }
-    .paysticker b { display:block; color:#7a1f1f; font:800 .58rem/1 Arial,sans-serif; margin-bottom:.22rem; }
-    .tape { position:absolute; top:-11px; left:50%; width:46px; height:20px; margin-left:-23px; background:linear-gradient(180deg,rgba(255,255,245,.62),rgba(228,218,170,.34)); border-radius:1px; box-shadow:0 1px 2px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.45); transform:rotate(6deg); }
-    .tape:before, .tape:after { content:""; position:absolute; top:0; bottom:0; width:8px; background:linear-gradient(90deg,rgba(0,0,0,.08),transparent 70%); }
-    .tape:before { left:0; }
-    .tape:after { right:0; transform:scaleX(-1); }
     .block { margin:0 0 1.25rem; padding:1.35rem 1.3rem 1.4rem; background:rgba(255,255,255,.06); border-radius:18px; }
     h2 { font-size:clamp(1.25rem, 3.2vw, 1.55rem); font-weight:400; margin:0 0 .75rem; }
     h3 { font:700 .72rem/1 Arial,sans-serif; letter-spacing:.12em; text-transform:uppercase; color:#e0c48a; margin:1.1rem 0 .4rem; }
@@ -46,28 +38,7 @@
     .times { list-style:none; }
     .times li { display:grid; grid-template-columns:9.2rem 1fr; gap:.6rem; padding:.35rem 0; border-bottom:1px solid rgba(255,255,255,.08); font-size:.98rem; }
     .times b { font:700 .78rem/1 Arial,sans-serif; color:#e0c48a; }
-    .card { background:transparent; color:#f3efe6; border-radius:16px; padding:1.15rem 0; margin:0; }
-    label { display:block; font:650 .75rem Arial,sans-serif; margin:.45rem 0 .2rem; }
-    label i { color:#c62828; font-style:normal; }
-    input, select { width:100%; padding:.6rem .7rem; border:1px solid #d5d0c8; border-radius:8px; font:16px Arial,sans-serif; background:#fff; }
-    .grid { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
-    .grid3 { display:grid; grid-template-columns:1.4fr .6fr .7fr; gap:.5rem; }
-    .person { border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:.75rem; margin-top:.55rem; background:rgba(0,0,0,.16); }
-    .person-head { display:flex; justify-content:space-between; align-items:center; }
-    .tag { font:700 .7rem Arial,sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#e0c48a; }
-    button { font:700 .9rem Arial,sans-serif; border:0; border-radius:10px; padding:.75rem 1.05rem; cursor:pointer; }
-    .add { background:#e67a28; color:#fff; margin:.5rem .35rem 0 0; box-shadow:0 3px 0 #b85a18; }
-    .add:hover { filter:brightness(1.06); }
-    .remove { background:none; color:#e0c48a; box-shadow:none; }
-    .go { width:100%; background:#e67a28; color:#fff; margin-top:.55rem; padding:.95rem; box-shadow:0 3px 0 #b85a18; }
-    .go:hover:not(:disabled) { filter:brightness(1.06); }
-    .go:disabled { background:rgba(255,255,255,.08); color:#cfc6b6; cursor:not-allowed; box-shadow:none; }
-    .total { font-size:1.45rem; }
-    .err { color:#ffb4a8; display:none; margin-top:.5rem; font:15px Arial,sans-serif; }
-    .hint { color:#cfc6b6; font:14.5px/1.45 Arial,sans-serif; margin:.3rem 0 .2rem; }
-    #summary { display:none; }
-    #summary.on { display:block; }
-    @media (max-width:700px) { .two, .grid, .grid3 { grid-template-columns:1fr; } .times li { grid-template-columns:1fr; } .title-row { flex-direction:column; gap:.7rem; } .paysticker { width:8.6rem; } }
+    @media (max-width:700px) { .two { grid-template-columns:1fr; } .times li { grid-template-columns:1fr; } .title-row { flex-direction:column; gap:.7rem; } }
   </style>
 </head>
 <body>
@@ -80,7 +51,7 @@
       <a class="phone" href="tel:8002228207,1">(800) 222-8207, Ext. 1</a>
       <span class="fax">Fax (740) 965-9560</span>
       <p class="sub">Dental continuing education &middot; Ohio &middot; Anesthesia and pharmacology</p>
-      <nav class="nav"><a href="#course">Course</a><a class="hi" href="#register">Register</a></nav>
+      <nav class="nav"><a href="#course">Course</a><a href="#register">Registration</a></nav>
     </header>
     <section class="block ended" role="status">
       <p>The 2026 Sunbury Seminars course has concluded. Thank you to all who attended. Information about future seminars will be posted here.</p>
@@ -123,175 +94,12 @@
       <p>Dr. Carl R. Fleser, D.D.S., M.S. &mdash; Course Director; Clinical Assistant Professor, The Ohio State University College of Dentistry; Director, Ambulatory Anesthesia Group, Inc.</p>
       <p>Dr. Bryant W. Cornelius, D.D.S., M.P.H., M.B.A. &mdash; Clinical Assistant Professor, The Ohio State University College of Dentistry; Chief Anesthesiologist, Blue Cloud Cleveland Children's Surgery Center.</p>
     </section>
-    <section class="block" id="register">
-      <h2>Register</h2>
-      <form id="form">
-        <div id="entry">
-          <div class="card">
-            <strong>Attendees</strong>
-            <p class="hint">Add yourself as Dentist or Staff. Add more people under that if needed.</p>
-            <div id="people"></div>
-            <button type="button" class="add" id="addDentist">+ Dentist $525</button>
-            <button type="button" class="add" id="addStaff">+ Staff $300</button>
-            <p class="err" id="err"></p>
-          </div>
-        </div>
-        <div class="card" id="paycard">
-          <div class="hint" id="summary"></div>
-          <div class="total" id="total">Total $0.00</div>
-          <button class="go" type="button" id="paybtn" disabled>Pay on Clover</button>
-        </div>
-      </form>
+    <section class="block ended" id="register">
+      <h2>Registration</h2>
+      <p>The 2026 seminar has ended. Thank you to everyone who attended. Registration is closed. Future course dates will be posted on this page when available.</p>
     </section>
   </div>
   <script>
-    const PAY = 'https://sunbury-seminars-pay-preview.vercel.app/api/create-checkout';
-    const STATES = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'];
-    const peopleEl = document.getElementById('people');
-    let n = 0;
-    function stateOptions() {
-      return '<option value="">ST</option>' + STATES.map(s => `<option value="${s}">${s}</option>`).join('');
-    }
-    function formatPhone(v) {
-      const d = String(v || '').replace(/\D/g, '').slice(0, 10);
-      if (d.length < 4) return d;
-      if (d.length < 7) return d.slice(0, 3) + '-' + d.slice(3);
-      return d.slice(0, 3) + '-' + d.slice(3, 6) + '-' + d.slice(6);
-    }
-    async function fillZip(wrap) {
-      const street = wrap.querySelector('[name^="street"]').value.trim();
-      const city = wrap.querySelector('[name^="city"]').value.trim();
-      const state = wrap.querySelector('[name^="state"]').value.trim();
-      const zipEl = wrap.querySelector('[name^="zip"]');
-      if (!city || !state || zipEl.dataset.manual === '1') return;
-      try {
-        if (street) {
-          const q = encodeURIComponent(`${street}, ${city}, ${state}, USA`);
-          const r = await fetch('https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&countrycodes=us&q=' + q, { headers: { 'Accept-Language': 'en' } });
-          if (r.ok) {
-            const rows = await r.json();
-            const post = rows[0] && rows[0].address && (rows[0].address.postcode || '').slice(0, 5);
-            if (/^\d{5}$/.test(post)) { zipEl.value = post; return; }
-          }
-        }
-        const z = await fetch('https://api.zippopotam.us/us/' + state + '/' + encodeURIComponent(city));
-        if (!z.ok) return;
-        const data = await z.json();
-        const places = data.places || [];
-        if (places[0] && places[0]['post code']) zipEl.value = places[0]['post code'];
-      } catch (e) {}
-    }
-    function addPerson(role) {
-      n += 1;
-      const wrap = document.createElement('div');
-      wrap.className = 'person';
-      wrap.dataset.role = role;
-      wrap.innerHTML = `
-        <div class="person-head"><span class="tag">${n === 1 ? 'You \u00b7 ' : ''}${role === 'dentist' ? 'Dentist \u00b7 $525' : 'Staff \u00b7 $300'}</span>
-        <button type="button" class="remove">Remove</button></div>
-        <div class="grid">
-          <div><label>First name <i>*</i></label><input name="first-${n}" required></div>
-          <div><label>Last name <i>*</i></label><input name="last-${n}" required></div>
-        </div>
-        <div class="grid">
-          <div><label>Email <i>*</i></label><input type="email" name="email-${n}" required></div>
-          <div><label>Phone <i>*</i></label><input name="phone-${n}" inputmode="tel" autocomplete="tel" maxlength="12" required></div>
-        </div>
-        <label>Address <i>*</i></label><input name="street-${n}" autocomplete="street-address" required>
-        <div class="grid3">
-          <div><label>City <i>*</i></label><input name="city-${n}" autocomplete="address-level2" required></div>
-          <div><label>State <i>*</i></label><select name="state-${n}" required>${stateOptions()}</select></div>
-          <div><label>ZIP <i>*</i></label><input name="zip-${n}" inputmode="numeric" maxlength="10" required></div>
-        </div>`;
-      wrap.querySelector('.remove').onclick = () => { wrap.remove(); tally(); };
-      wrap.querySelector('[name^="phone"]').addEventListener('input', (e) => {
-        e.target.value = formatPhone(e.target.value);
-      });
-      wrap.querySelector('[name^="zip"]').addEventListener('input', (e) => {
-        if (e.target.value.trim()) e.target.dataset.manual = '1';
-      });
-      ['street', 'city', 'state'].forEach((key) => {
-        wrap.querySelector('[name^="' + key + '"]').addEventListener('change', () => fillZip(wrap));
-        wrap.querySelector('[name^="' + key + '"]').addEventListener('blur', () => fillZip(wrap));
-      });
-      peopleEl.appendChild(wrap); tally();
-    }
-    function roster() {
-      return [...peopleEl.querySelectorAll('.person')].map(p => ({
-        role: p.dataset.role,
-        first: p.querySelector('[name^="first"]').value.trim(),
-        last: p.querySelector('[name^="last"]').value.trim(),
-        email: p.querySelector('[name^="email"]').value.trim().toLowerCase(),
-        phone: p.querySelector('[name^="phone"]').value.trim(),
-        street: p.querySelector('[name^="street"]').value.trim(),
-        city: p.querySelector('[name^="city"]').value.trim(),
-        state: p.querySelector('[name^="state"]').value.trim(),
-        zip: p.querySelector('[name^="zip"]').value.trim()
-      }));
-    }
-    function totalOf(list) { return list.reduce((s, p) => s + (p.role === 'staff' ? 300 : 525), 0); }
-    function tally() {
-      const list = roster();
-      const d = list.filter(x => x.role === 'dentist').length;
-      const s = list.filter(x => x.role === 'staff').length;
-      const sum = document.getElementById('summary');
-      if (list.length) {
-        sum.textContent = `${list.length} attendee(s) \u00b7 ${d} dentist \u00b7 ${s} staff`;
-        sum.classList.add('on');
-      } else {
-        sum.textContent = '';
-        sum.classList.remove('on');
-      }
-      document.getElementById('total').textContent = 'Total $' + totalOf(list).toFixed(2);
-      document.getElementById('err').style.display = 'none';
-      const pay = document.getElementById('paybtn');
-      if (list.length) {
-        pay.disabled = false;
-        pay.textContent = 'Pay $' + totalOf(list).toFixed(2) + ' on Clover';
-      } else {
-        pay.disabled = true;
-        pay.textContent = 'Pay on Clover';
-      }
-    }
-    function buyerOf(list) {
-      const p = list[0] || {};
-      return { first: p.first || '', last: p.last || '', email: p.email || '', phone: p.phone || '', street: p.street || '', city: p.city || '', state: p.state || '', zip: p.zip || '', practice: '', attending: true };
-    }
-    function showErr(t) {
-      const err = document.getElementById('err');
-      err.textContent = t; err.style.display = 'block';
-    }
-    function valid() {
-      const list = roster();
-      if (!list.length) return showErr('Add at least one dentist or staff.'), false;
-      if (list.some(p => !p.first || !p.last || !p.email || !p.phone || !p.street || !p.city || !p.state || !p.zip))
-        return showErr('Every attendee field is required.'), false;
-      return true;
-    }
-    document.getElementById('addDentist').onclick = () => addPerson('dentist');
-    document.getElementById('addStaff').onclick = () => addPerson('staff');
-    document.getElementById('paybtn').onclick = async () => {
-      if (!valid()) return;
-      const people = roster();
-      const submitted = { buyer: buyerOf(people), people, paid: true, paidAt: new Date().toISOString() };
-      try { sessionStorage.setItem('ssiRoster', JSON.stringify(submitted)); } catch (e) {}
-      const btn = document.getElementById('paybtn');
-      btn.disabled = true; btn.textContent = 'Opening Clover\u2026';
-      try {
-        const r = await fetch(PAY, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(submitted) });
-        const data = await r.json();
-        if (!r.ok || !data.href) throw new Error(data.error || 'Clover did not return a pay page.');
-        if (data.checkoutSessionId) {
-          submitted.checkoutSessionId = data.checkoutSessionId;
-          try { sessionStorage.setItem('ssiRoster', JSON.stringify(submitted)); } catch (e) {}
-        }
-        location.href = data.href;
-      } catch (ex) {
-        showErr(ex.message);
-        btn.disabled = false;
-        btn.textContent = 'Pay $' + totalOf(people).toFixed(2) + ' on Clover';
-      }
-    };
     (function () {
       var a = document.getElementById('add-cal');
       if (!a) return;
